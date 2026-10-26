@@ -1,0 +1,339 @@
+
+{
+  "instance_id": "mtrsp_hard_testset3_v1",
+  "description": "Test Set 3: three regions, nine ports, four vessels, 18 indivisible shipments, transshipment allowed, no chokepoints.",
+  "time_unit": "hour",
+  "planning_horizon_hours": 300,
+  "ports": [
+    {"name": "Shanghai", "type": "hub", "region": "east_asia"},
+    {"name": "Taicang", "type": "feeder", "region": "east_asia"},
+    {"name": "Nantong", "type": "feeder", "region": "east_asia"},
+    {"name": "Rotterdam", "type": "hub", "region": "europe"},
+    {"name": "Hamburg", "type": "feeder", "region": "europe"},
+    {"name": "Felixstowe", "type": "feeder", "region": "europe"},
+    {"name": "Jebel Ali", "type": "hub", "region": "middle_east"},
+    {"name": "Ajman", "type": "feeder", "region": "middle_east"},
+    {"name": "Sharjah", "type": "feeder", "region": "middle_east"}
+  ],
+  "routes": [
+    {
+      "origin": "Shanghai",
+      "destination": "Taicang",
+      "duration_hours": 8,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Taicang",
+      "destination": "Shanghai",
+      "duration_hours": 8,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Shanghai",
+      "destination": "Nantong",
+      "duration_hours": 10,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Nantong",
+      "destination": "Shanghai",
+      "duration_hours": 10,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Taicang",
+      "destination": "Nantong",
+      "duration_hours": 5,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Nantong",
+      "destination": "Taicang",
+      "duration_hours": 5,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Rotterdam",
+      "destination": "Hamburg",
+      "duration_hours": 7,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Hamburg",
+      "destination": "Rotterdam",
+      "duration_hours": 7,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Rotterdam",
+      "destination": "Felixstowe",
+      "duration_hours": 4,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Felixstowe",
+      "destination": "Rotterdam",
+      "duration_hours": 4,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Hamburg",
+      "destination": "Felixstowe",
+      "duration_hours": 12,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Felixstowe",
+      "destination": "Hamburg",
+      "duration_hours": 12,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Jebel Ali",
+      "destination": "Ajman",
+      "duration_hours": 6,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Ajman",
+      "destination": "Jebel Ali",
+      "duration_hours": 6,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Jebel Ali",
+      "destination": "Sharjah",
+      "duration_hours": 5,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Sharjah",
+      "destination": "Jebel Ali",
+      "duration_hours": 5,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Sharjah",
+      "destination": "Ajman",
+      "duration_hours": 2,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Ajman",
+      "destination": "Sharjah",
+      "duration_hours": 2,
+      "allowed_types": ["feeder"]
+    },
+    {
+      "origin": "Shanghai",
+      "destination": "Jebel Ali",
+      "duration_hours": 30,
+      "allowed_types": ["large"]
+    },
+    {
+      "origin": "Jebel Ali",
+      "destination": "Shanghai",
+      "duration_hours": 30,
+      "allowed_types": ["large"]
+    },
+    {
+      "origin": "Jebel Ali",
+      "destination": "Rotterdam",
+      "duration_hours": 30,
+      "allowed_types": ["large"]
+    },
+    {
+      "origin": "Rotterdam",
+      "destination": "Jebel Ali",
+      "duration_hours": 30,
+      "allowed_types": ["large"]
+    }
+  ],
+  "vessels": [
+    {
+      "id": "V1",
+      "type": "large",
+      "start_port": "Shanghai",
+      "capacity": 24,
+      "max_voyages": 10
+    },
+    {
+      "id": "V2",
+      "type": "feeder",
+      "start_port": "Nantong",
+      "region": "east_asia",
+      "capacity": 6,
+      "max_voyages": 12
+    },
+    {
+      "id": "V3",
+      "type": "feeder",
+      "start_port": "Hamburg",
+      "region": "europe",
+      "capacity": 6,
+      "max_voyages": 12
+    },
+    {
+      "id": "V4",
+      "type": "feeder",
+      "start_port": "Jebel Ali",
+      "region": "middle_east",
+      "capacity": 6,
+      "max_voyages": 12
+    }
+  ],
+  "shipments": [
+    {
+      "id": "C1",
+      "origin": "Taicang",
+      "destination": "Nantong",
+      "quantity": 4,
+      "deadline_hour": 30,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C2",
+      "origin": "Hamburg",
+      "destination": "Felixstowe",
+      "quantity": 3,
+      "deadline_hour": 24,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C3",
+      "origin": "Nantong",
+      "destination": "Shanghai",
+      "quantity": 3,
+      "deadline_hour": 36,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C4",
+      "origin": "Rotterdam",
+      "destination": "Shanghai",
+      "quantity": 6,
+      "deadline_hour": 150,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C5",
+      "origin": "Shanghai",
+      "destination": "Felixstowe",
+      "quantity": 2,
+      "deadline_hour": 100,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C6",
+      "origin": "Nantong",
+      "destination": "Rotterdam",
+      "quantity": 3,
+      "deadline_hour": 100,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C7",
+      "origin": "Hamburg",
+      "destination": "Shanghai",
+      "quantity": 6,
+      "deadline_hour": 200,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C8",
+      "origin": "Rotterdam",
+      "destination": "Taicang",
+      "quantity": 4,
+      "deadline_hour": 270,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C9",
+      "origin": "Taicang",
+      "destination": "Hamburg",
+      "quantity": 5,
+      "deadline_hour": 300,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C10",
+      "origin": "Felixstowe",
+      "destination": "Rotterdam",
+      "quantity": 6,
+      "deadline_hour": 50,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C11",
+      "origin": "Felixstowe",
+      "destination": "Nantong",
+      "quantity": 2,
+      "deadline_hour": 170,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C12",
+      "origin": "Shanghai",
+      "destination": "Hamburg",
+      "quantity": 1,
+      "deadline_hour": 100,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C13",
+      "origin": "Sharjah",
+      "destination": "Ajman",
+      "quantity": 4,
+      "deadline_hour": 15,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C14",
+      "origin": "Ajman",
+      "destination": "Rotterdam",
+      "quantity": 5,
+      "deadline_hour": 100,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C15",
+      "origin": "Nantong",
+      "destination": "Sharjah",
+      "quantity": 3,
+      "deadline_hour": 110,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C16",
+      "origin": "Hamburg",
+      "destination": "Ajman",
+      "quantity": 4,
+      "deadline_hour": 145,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C17",
+      "origin": "Jebel Ali",
+      "destination": "Taicang",
+      "quantity": 6,
+      "deadline_hour": 200,
+      "mandatory_stop": null
+    },
+    {
+      "id": "C18",
+      "origin": "Felixstowe",
+      "destination": "Sharjah",
+      "quantity": 3,
+      "deadline_hour": 165,
+      "mandatory_stop": null
+    }
+  ],
+  "rules": {
+    "cargo_splitting_allowed": false,
+    "max_transport_legs_per_container": 46,
+    "cargo_handling_time_hours": 0,
+    "port_storage_capacity": "unlimited",
+    "same_hour_transfer_allowed": true,
+    "chokepoints": []
+  }
+}

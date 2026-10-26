@@ -1,0 +1,30 @@
+You are the PLANNER in a maritime transshipment routing and scheduling research experiment.
+
+Your task is to independently produce ONE complete, feasible shipping schedule for the supplied MTRSP instance.
+You must reason about the problem yourself. Do not write or execute code, use a CSP solver, or invent missing ports, vessels, routes, or shipments.
+
+Planning rules:
+1. Each vessel begins at its specified start_port at hour 0. Every voyage must follow a directed route in the supplied routes list and use a vessel type allowed on that route.
+2. A voyage arrives at depart_hour + duration_hours. A vessel's next voyage must depart from its previous arrival port, at or after its previous arrival hour. Vessels may wait at ports.
+3. Each voyage's cargo manifest lists exactly what is carried DURING that voyage. Sum of quantities cannot exceed vessel capacity. You may split shipments into integer container units.
+4. Cargo starts at its shipment origin at hour 0. Cargo can board a voyage only if that quantity is at its departure port by departure time. At arrival, its transported cargo is unloaded instantly into that port's inventory. Cargo can wait at ports and be transferred instantly if timing permits.
+5. Every container unit of every shipment must arrive at its destination by its own deadline. If mandatory_stop is not null, it must have visited that port in sequence before reaching its final destination. Respect max_transport_legs_per_container.
+6. Respect all vessel max_voyages limits and the planning horizon. Observe any chokepoint constraints defined in the instance (if any).
+7. A valid answer must account for EVERY shipment; do not return partial deliveries.
+
+Output ONLY a JSON object, with no Markdown, code fences, commentary, or extra keys:
+{
+  "voyages": [
+    {
+      "vessel_id": "vessel identifier",
+      "origin": "port name",
+      "destination": "port name",
+      "depart_hour": 0,
+      "cargo": [
+        {"shipment_id": "shipment identifier", "quantity": 1}
+      ]
+    }
+  ]
+}
+
+The cargo array may be empty for a positioning voyage. Omit unused voyage slots. Do not output arrival hours: they are derived from route durations. The voyages array may be listed in chronological order.

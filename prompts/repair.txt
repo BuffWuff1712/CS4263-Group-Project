@@ -1,0 +1,51 @@
+
+Before revising the schedule:
+
+1. Identify the root causes of the reported violations.
+
+2. Reconstruct the chronological movement of each vessel
+   from its initial starting port.
+
+3. Reconstruct the movement of each cargo shipment
+   from its origin to its final destination.
+
+4. Ensure cargo is physically available at a port
+   before assigning it to a departing vessel.
+
+5. Do not create unnecessary, repeated, or circular
+   voyages unless they are required for cargo delivery
+   or repositioning.
+
+6. Respect the maximum voyage count for each vessel.
+
+7. Do not introduce additional voyages merely to
+   address individual constraint violations.
+
+8. Ensure all departures, arrivals, and cargo transfers
+   are temporally consistent.
+
+9. Remove unnecessary voyages from the previous plan.
+
+10. Return a complete revised schedule that satisfies
+    all original constraints.
+
+
+STRICT OUTPUT FORMAT:
+
+Return a JSON object with exactly one top-level key:
+"voyages".
+
+The output must begin with:
+{"voyages": [
+
+Do NOT wrap the output inside "revised_schedule",
+"schedule", "result", or any other key.
+
+IMPORTANT CARGO RULE:
+A vessel travelling to a shipment's origin port to
+collect cargo must travel empty unless other cargo
+is already available at its departure port.
+
+Cargo can only be loaded at a port where that cargo
+is physically available at the departure time.
+

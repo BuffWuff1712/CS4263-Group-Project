@@ -1,0 +1,39 @@
+{
+  "instance_id": "mtrsp_easy_v1",
+  "description": "Easy MTRSP: basic routing, scheduling, capacity, and transshipment; no chokepoints.",
+  "time_unit": "hour",
+  "planning_horizon_hours": 40,
+  "ports": [
+    {"name": "Shanghai", "type": "hub", "region": "east_asia"},
+    {"name": "Taicang", "type": "feeder", "region": "east_asia"},
+    {"name": "Nantong", "type": "feeder", "region": "east_asia"}
+  ],
+  "routes": [
+    {"origin": "Shanghai", "destination": "Taicang", "duration_hours": 8, "allowed_types": ["feeder"]},
+    {"origin": "Taicang", "destination": "Shanghai", "duration_hours": 8, "allowed_types": ["feeder"]},
+
+    {"origin": "Shanghai", "destination": "Nantong", "duration_hours": 10, "allowed_types": ["feeder"]},
+    {"origin": "Nantong", "destination": "Shanghai", "duration_hours": 10, "allowed_types": ["feeder"]},
+
+    {"origin": "Nantong", "destination": "Taicang", "duration_hours": 5, "allowed_types": ["feeder"]},
+    {"origin": "Taicang", "destination": "Nantong", "duration_hours": 5, "allowed_types": ["feeder"]}
+    
+  ],
+  "vessels": [
+    {"id": "F1", "type": "feeder", "start_port": "Shanghai", "region": "east_asia", "capacity": 6, "max_voyages": 3},
+    {"id": "F2", "type": "feeder", "start_port": "Nantong", "region": "east_asia", "capacity": 6, "max_voyages": 3}
+  ],
+  "shipments": [
+    {"id": "C1", "origin": "Taicang", "destination": "Nantong", "quantity": 4, "deadline_hour": 30, "mandatory_stop": null},
+    {"id": "C2", "origin": "Nantong", "destination": "Shanghai", "quantity": 5, "deadline_hour": 25, "mandatory_stop": null},
+    {"id": "C3", "origin": "Shanghai", "destination": "Taicang", "quantity": 3, "deadline_hour": 20, "mandatory_stop": null}
+  ],
+  "rules": {
+    "cargo_splitting_allowed": true,
+    "max_transport_legs_per_container": 3,
+    "cargo_handling_time_hours": 0,
+    "port_storage_capacity": "unlimited",
+    "same_hour_transfer_allowed": true,
+    "chokepoints": []
+  }
+}
