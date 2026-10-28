@@ -2,6 +2,8 @@
 import json
 import os
 import re
+import time
+import random
 from pathlib import Path
 from time import time_ns
 
@@ -9,9 +11,46 @@ from pydantic import ValidationError
 
 from planner import get_client, load_prompt, parse_schedule
 from schemas import Schedule, Violation
+from openai import RateLimitError
 
 
 ROOT = Path(__file__).resolve().parent
+
+def call_with_retry(client, **kwargs):
+    max_attempts = 6
+
+    for attempt in range(max_attempts):
+        try:
+            return client.with_options(
+                max_retries=0
+            ).chat.completions.create(**kwargs)
+
+        except RateLimitError as e:
+            if attempt == max_attempts - 1:
+                raise
+
+            headers = e.response.headers
+            retry_after = headers.get("retry-after")
+
+            try:
+                delay = float(retry_after)
+            except (TypeError, ValueError):
+                match = re.search(
+                    r"try again in ([\d.]+)s",
+                    str(e),
+                    re.IGNORECASE
+                )
+                delay = (
+                    float(match.group(1))
+                    if match
+                    else min(20 * (2 ** attempt), 120)
+                )
+
+            delay = max(delay, 1) + random.uniform(1, 3)
+
+            print(f"Rate limited. Retrying in {delay:.1f}s")
+            time.sleep(delay)
+
 
 def repair(
     instance: dict,
@@ -51,7 +90,8 @@ def repair(
 
     model = model
 
-    response = client.chat.completions.create(
+    response = call_with_retry(
+        client=client,
         model=model,
         messages=[
             {
@@ -67,7 +107,7 @@ def repair(
                 )
             }
         ],
-        reasoning_effort="high"
+        reasoning_effort=os.getenv("REASONING_EFFORT", "")
     )
 
     

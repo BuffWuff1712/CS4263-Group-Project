@@ -330,7 +330,7 @@
   ],
   "rules": {
     "cargo_splitting_allowed": false,
-    "max_transport_legs_per_container": 46,
+    "max_transport_legs_per_container": 6,
     "cargo_handling_time_hours": 0,
     "port_storage_capacity": "unlimited",
     "same_hour_transfer_allowed": true,

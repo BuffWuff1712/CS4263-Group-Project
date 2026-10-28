@@ -49,6 +49,7 @@ def generate_candidate(
     instance: dict[str, Any],
     *,
     model: str = "qwen3.5:9b",
+    reasoning: str ="",
     system_prompt: str | None = None,
 ) -> dict[str, Any]:
     """One-shot LLM call. No semantic constraint checking or automated schedule repair."""
@@ -68,7 +69,7 @@ def generate_candidate(
                 ),
             },
         ],
-        reasoning_effort="high",
+        reasoning_effort=reasoning,
     )
 
     message = response.choices[0].message

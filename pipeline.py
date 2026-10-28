@@ -16,7 +16,7 @@ MAX_REPAIRS = 3
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
-MODEL = os.getenv("OPENAI_MODEL", "gpt-6.1-sol")
+MODEL = os.getenv("OPENAI_MODEL", "gpt-5")
 
 
 def run_pipeline(instance_path, max_repairs=MAX_REPAIRS):
@@ -38,7 +38,8 @@ def run_pipeline(instance_path, max_repairs=MAX_REPAIRS):
     candidate = planner.generate_candidate(
         client=client,
         instance=instance,
-        model=MODEL
+        model=MODEL,
+        reasoning=os.getenv("REASONING_EFFORT", "")
     )
 
     # Check if planner returned a parseable schedule
