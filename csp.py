@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
@@ -10,6 +11,27 @@ from schemas import CargoLoad, Schedule, Voyage
 from simulator import simulate
 
 sys.setrecursionlimit(20000)
+
+
+class Timeout(Exception):
+    pass
+
+
+class Restart(Exception):
+    pass
+
+
+def luby(i: int) -> int:
+    """i-th term (1-based) of the Luby sequence 1,1,2,1,1,2,4,1,1,2,..."""
+    k = 1
+    while (1 << k) - 1 < i:
+        k += 1
+    while i != (1 << k) - 1:
+        i -= (1 << (k - 1)) - 1
+        k = 1
+        while (1 << k) - 1 < i:
+            k += 1
+    return 1 << (k - 1)
 
 
 def bits(mask: int):
@@ -65,8 +87,9 @@ class CSP:
             self.dom[v] = old
         self.version += 1
 
-    def propagate(self, start_vars=None) -> bool:
-        """AC-3 style fixpoint: re-run every propagator watching a changed var."""
+    def propagate(self, start_vars=None, learn=True) -> bool:
+        """AC-3 style fixpoint: re-run every propagator watching a changed var.
+        learn=False (trial propagation) leaves the dom/wdeg weights alone."""
         queue, queued = deque(), set()
         if start_vars is None:
             todo = range(len(self.props))
@@ -81,7 +104,8 @@ class CSP:
             self.propagations += 1
             self.changed = []
             if not self.props[p].run(self):
-                self.weight[p] += 1.0     # dom/wdeg: remember hard constraints
+                if learn:
+                    self.weight[p] += 1.0     # dom/wdeg: remember hard constraints
                 return False
             for v in set(self.changed):
                 for q in self.watch[v]:
@@ -118,7 +142,6 @@ class BinaryTable:
 # ---------------------------------------------------------------------------
 class Model:
     def __init__(self, instance: dict):
-        self.inst = instance
         self.H = instance["planning_horizon_hours"]
         rules = instance["rules"]
         self.max_legs = rules["max_transport_legs_per_container"]
@@ -181,7 +204,10 @@ class Model:
                                        qty=s["quantity"], dl=s["deadline_hour"]))
         self.m = min(self.max_legs, n - 1)   # simple paths need <= n-1 legs
 
+        self.slot_type = [self.vessels[vi]["type"] for vi, _ in self.slots]
+
         self._bounds_version, self._bounds = -1, None
+        self.deadline, self.node_limit, self.restarts = None, float("inf"), 0
         self.csp = CSP()
         self._build()
 
@@ -366,7 +392,7 @@ class Model:
         for val in vals:                       # LCV by trial propagation
             mark = len(csp.trail)
             csp.set_dom(var, 1 << val)
-            ok = csp.propagate([var])
+            ok = csp.propagate([var], learn=False)
             if ok:
                 scored.append((-sum(bin(m).count("1") for m in csp.dom), val))
             csp.undo(mark)
@@ -376,6 +402,10 @@ class Model:
     def backtrack(self):
         csp = self.csp
         csp.nodes += 1
+        if self.deadline is not None and time.perf_counter() > self.deadline:
+            raise Timeout
+        if csp.nodes > self.node_limit:
+            raise Restart
         var = self.select_var()
         if var is None:
             return True
@@ -388,14 +418,35 @@ class Model:
         csp.backtracks += 1
         return False
 
-    def solve(self):
+    def solve(self, time_limit=None, restart_base=None):
+        """Backtracking, optionally with Luby restarts: run i stops after
+        restart_base * luby(i) nodes and restarts from the root, keeping the
+        dom/wdeg weights learnt so far.  Run lengths are unbounded, so the
+        search stays complete.  Off by default: on medium, restarts (base 100
+        or 5000) turned a 32 s solve into a 600 s timeout.  Returns "timeout"
+        once time_limit seconds pass."""
         csp = self.csp
+        self.deadline = (None if time_limit is None
+                         else time.perf_counter() + time_limit)
         if not csp.propagate():
             return "infeasible", None
 
-        ok = self.backtrack()
-
-        return ("feasible", self.extract()) if ok else ("infeasible", None)
+        root = len(csp.trail)
+        run = 0
+        while True:
+            run += 1
+            self.restarts = run - 1
+            self.node_limit = (float("inf") if restart_base is None
+                               else csp.nodes + restart_base * luby(run))
+            try:
+                ok = self.backtrack()
+            except Restart:
+                csp.undo(root)
+                continue
+            except Timeout:
+                csp.undo(root)
+                return "timeout", None
+            return ("feasible", self.extract()) if ok else ("infeasible", None)
 
     # -- schedule extraction -----------------------------------------------------
     def extract(self) -> Schedule:
@@ -441,7 +492,7 @@ class ItemFlow:
         m, NQ = M.m, M.NONE_Q
         dbit = 1 << it["d"]
         out_mask = M.out_mask
-        vtype = [M.vessels[M.slots[s][0]]["type"] for s in range(M.S)]
+        vtype = M.slot_type
 
         # fixed-slot bookkeeping: all-different, nothing after delivery
         for j in range(m):
@@ -540,12 +591,10 @@ class Purpose:
     def run(self, csp: CSP) -> bool:
         M = self.M
         can_carry = [False] * M.S
-        count = [0] * M.S
         for row in M.Q:
             for q in row:
                 for s in bits(csp.dom[q] & ~(1 << M.NONE_Q)):
                     can_carry[s] = True
-                    count[s] += 1
         none_bit = 1 << M.NONE_P
         for vi, v in enumerate(M.vessels):
             nxt_possible = False                   # a later slot may still be useful
@@ -600,7 +649,6 @@ class Capacity:
     def run(self, csp: CSP) -> bool:
         M = self.M
         load = [0] * M.S
-        placed = [set() for _ in M.items]
         for ii, row in enumerate(M.Q):
             for q in row:
                 m = csp.dom[q]
@@ -608,7 +656,6 @@ class Capacity:
                     s = m.bit_length() - 1
                     if s != M.NONE_Q:
                         load[s] += M.items[ii]["qty"]
-                        placed[ii].add(s)
         cap = [M.vessels[M.slots[s][0]]["capacity"] for s in range(M.S)]
         for s in range(M.S):
             if load[s] > cap[s]:
@@ -641,7 +688,7 @@ class Timing:
         bd = M.bounds()
         if bd is None:
             return False
-        dep, arr, mind = bd
+        dep = bd[0]
         INF = 10**9
         on_slot = {}                         # slot -> items fixed onto it
         for ii, row in enumerate(M.Q):
@@ -683,16 +730,23 @@ class Timing:
 
 
 # ---------------------------------------------------------------------------
-def solve_instance(instance: dict):
+def solve_instance(instance: dict, time_limit=None, restart_base=None):
+    """solve_time_s covers model construction as well as search."""
     t0 = time.perf_counter()
-    model = Model(instance)
-    status, schedule = model.solve()
+    try:
+        model = Model(instance)
+    except NotImplementedError as exc:
+        return None, {"status": "unsupported", "reason": str(exc)}
+    status, schedule = model.solve(time_limit=time_limit,
+                                   restart_base=restart_base)
     elapsed = time.perf_counter() - t0
     metrics = {
         "status": status,
         "solve_time_s": round(elapsed, 3),
+        "time_limit_s": time_limit,
         "nodes_expanded": model.csp.nodes,
         "backtracks": model.csp.backtracks,
+        "restarts": model.restarts,
         "propagations": model.csp.propagations,
         "variables": len(model.csp.dom),
     }
@@ -704,14 +758,25 @@ def solve_instance(instance: dict):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Classical CSP baseline for MTRSP")
+    parser.add_argument("names", nargs="*", default=["easy", "medium", "hard"])
+    parser.add_argument("--time-limit", type=float, default=600,
+                        help="seconds per instance (0 = no limit)")
+    parser.add_argument("--restart-base", type=int, default=0,
+                        help="nodes per Luby unit (0 = no restarts)")
+    args = parser.parse_args()
+
     base = Path(__file__).resolve().parent
-    names = sys.argv[1:] or ["easy", "medium", "hard"]
     out_dir = base / "results" / "classical_csp"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    for name in names:
+    for name in args.names:
         instance = json.loads((base / "data" / f"{name}.json").read_text())
-        schedule, metrics = solve_instance(instance)
+        schedule, metrics = solve_instance(
+            instance,
+            time_limit=args.time_limit or None,
+            restart_base=args.restart_base or None,
+        )
         print(f"{name.upper()}: {metrics}", flush=True)
         if schedule is not None:
             (out_dir / f"{name}_schedule.json").write_text(
