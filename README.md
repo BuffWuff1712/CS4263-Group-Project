@@ -1,4 +1,4 @@
-# Maritime Transshipment Routing and Scheduling — Solution B
+# Maritime Transshipment Routing and Scheduling — Solution A & B
 
 This project implements an **LLM-based Plan–Simulate–Repair pipeline** to solve the Maritime Transshipment Routing and Scheduling Problem (MTRSP).
 
