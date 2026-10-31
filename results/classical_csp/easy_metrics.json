@@ -1,0 +1,13 @@
+{
+  "status": "feasible",
+  "solve_time_s": 0.008,
+  "time_limit_s": 600,
+  "nodes_expanded": 15,
+  "backtracks": 0,
+  "restarts": 0,
+  "propagations": 779,
+  "variables": 30,
+  "valid": true,
+  "voyages": 6,
+  "violations": []
+}
