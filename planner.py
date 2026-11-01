@@ -12,18 +12,33 @@ from schemas import Schedule
 ROOT = Path(__file__).resolve().parent
 
 
-def get_client() -> Any:
-    """Keep the user's tested OPENAI / SOCLAAS OpenAI-compatible connection."""
+def get_client(provider: str = "openai") -> Any:
+    """Connect to OpenAI, SOCLAAS, or OpenRouter with separate credentials."""
     load_dotenv(ROOT / ".env")
-    api_key = os.environ.get("OPENAI_API_KEY")
-    base_url = os.environ.get("OPENAI_BASE_URL")
+    if provider not in ("openai", "soclaas", "openrouter"):
+        raise ValueError(f"Unknown provider: {provider}")
+    prefix = provider.upper()
+    api_key = os.environ.get(f"{prefix}_API_KEY")
+    base_url = os.environ.get(f"{prefix}_BASE_URL")
     if not api_key or not base_url:
         raise RuntimeError(
-            "Set API_KEY and BASE_URL in the environment "
+            f"Set {prefix}_API_KEY and {prefix}_BASE_URL in the environment "
             "or in the project's .env file."
         )
-    from openai import OpenAI  # Installed by requirements.txt; only needed for real API calls.
+    from openai import OpenAI
     return OpenAI(api_key=api_key, base_url=base_url.rstrip("/"))
+
+
+def get_model(provider: str) -> str:
+    """Choose a model from the selected provider without mixing credentials."""
+    load_dotenv(ROOT / ".env")
+    if provider == "soclaas":
+        return os.getenv("SOCLAAS_MODEL", "qwen3.6:35b")
+    if provider == "openrouter":
+        return os.getenv("OPENROUTER_MODEL", "qwen/qwen3.8-max-prime")
+    if provider == "openai":
+        return os.getenv("OPENAI_MODEL", "gpt-5")
+    raise ValueError(f"Unknown provider: {provider}")
 
 
 def load_instance(path: str | Path) -> dict[str, Any]:
@@ -49,28 +64,30 @@ def generate_candidate(
     instance: dict[str, Any],
     *,
     model: str = "qwen3.5:9b",
-    reasoning: str ="",
+    reasoning: str | None = None,
     system_prompt: str | None = None,
 ) -> dict[str, Any]:
     """One-shot LLM call. No semantic constraint checking or automated schedule repair."""
     if system_prompt is None:
         system_prompt = load_prompt(ROOT / "prompts" / "plan.txt")
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
+    request = {
+        "model": model,
+        "messages": [
             {"role": "system", "content": system_prompt},
             {
                 "role": "user",
                 "content": (
-                    "Find a complete feasible voyage schedule for this "
+                    "Find a complete feasible voyage schedule for this instance. "
                     "Return only JSON.\n\n"
                     + json.dumps(instance, indent=2, ensure_ascii=False)
                 ),
             },
         ],
-        reasoning_effort=reasoning,
-    )
+    }
+    if reasoning:
+        request["reasoning_effort"] = reasoning
+    response = client.chat.completions.create(**request)
 
     message = response.choices[0].message
     raw = message.content or ""

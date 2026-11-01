@@ -1,11 +1,8 @@
 import argparse
 import json
-import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-from planner import ROOT, generate_candidate, get_client, load_instance, load_prompt
+from planner import ROOT, generate_candidate, get_client, get_model, load_instance, load_prompt
 
 
 def main() -> None:
@@ -13,12 +10,18 @@ def main() -> None:
     parser.add_argument("--instance", type=Path, default=ROOT / "data" / "easy.json")
     parser.add_argument("--output", type=Path, default=ROOT / "results" / "easy_candidate.json")
     parser.add_argument("--prompt", type=Path, default=ROOT / "prompts" / "plan.txt")
+    parser.add_argument("--provider", choices=("soclaas", "openai", "openrouter"), default="soclaas")
+    parser.add_argument("--model", help="Override the provider's configured model")
+    parser.add_argument("--reasoning-effort", help="Use only with a model that supports this setting")
     args = parser.parse_args()
 
-    load_dotenv(ROOT / ".env")
-    model = os.getenv("SOCLAAS_MODEL", "qwen3.5:9b")
+    model = args.model or get_model(args.provider)
     instance = load_instance(args.instance)
-    result = generate_candidate(get_client(), instance, model=model, system_prompt=load_prompt(args.prompt))
+    result = generate_candidate(
+        get_client(args.provider), instance, model=model,
+        reasoning=args.reasoning_effort,
+        system_prompt=load_prompt(args.prompt),
+    )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     # Save raw output and metadata even when the JSON cannot be parsed.
