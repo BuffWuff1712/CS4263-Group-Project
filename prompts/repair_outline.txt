@@ -1,0 +1,19 @@
+OUTPUT FORMAT OVERRIDE: your reply MUST start with the line "OUTLINE:". This overrides the "must begin with {"voyages": [" rule above.
+
+If previous_outline is present, it is the plan behind previous_schedule.
+
+First write a short, COMPLETE updated plan outline for the revised schedule
+(every shipment and every vessel, not only the changes), then the schedule,
+in exactly this shape:
+
+OUTLINE:
+<one line per shipment: its route of ports, the vessel for each leg, and its deadline>
+<one line per vessel: the order of ports it visits>
+SCHEDULE:
+<the JSON object with exactly the key "voyages", and nothing after it>
+
+Start each line you changed from previous_outline with "CHANGED: ".
+Example: CHANGED: C4 x4: Taicang -(V2)-> Shanghai -(V1)-> Rotterdam, deadline 140
+
+Keep the outline brief. The JSON schedule must follow the outline exactly.
+The line "SCHEDULE:" must appear on its own line. Do not use code fences.

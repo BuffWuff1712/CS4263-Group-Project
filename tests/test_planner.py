@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 from pydantic import ValidationError
 
-from planner import ROOT, generate_candidate, load_instance, parse_schedule
+from planner import ROOT, generate_candidate, load_instance, parse_schedule, split_outline
 
 
 class FakeClient:
@@ -58,3 +58,41 @@ def test_generation_sends_requested_reasoning_effort():
     instance = load_instance(ROOT / "data" / "easy.json")
     generate_candidate(fake, instance, model="qwen3.5:9b", reasoning="medium", system_prompt="Return JSON")
     assert fake.requests[0]["reasoning_effort"] == "medium"
+
+
+def test_split_outline_with_marker():
+    text = 'OUTLINE:\nC1 x4: Taicang -(F2)-> Nantong, deadline 30\nSCHEDULE:\n{"voyages": []}'
+    outline, json_text = split_outline(text)
+    assert outline == "C1 x4: Taicang -(F2)-> Nantong, deadline 30"
+    assert parse_schedule(json_text).voyages == []
+
+
+def test_split_outline_without_marker_returns_text_unchanged():
+    text = '{"voyages": []}'
+    assert split_outline(text) == (None, text)
+
+
+def test_split_outline_handles_fenced_json_and_same_line_json():
+    fenced = 'OUTLINE:\nplan\n**SCHEDULE:**\n```json\n{"voyages": []}\n```'
+    outline, json_text = split_outline(fenced)
+    assert outline == "plan"
+    assert parse_schedule(json_text).voyages == []
+    same_line = 'OUTLINE:\nplan\nSCHEDULE: {"voyages": []}'
+    assert parse_schedule(split_outline(same_line)[1]).voyages == []
+
+
+def test_split_outline_uses_last_marker():
+    text = 'OUTLINE:\nwrite SCHEDULE: later\nSCHEDULE:\n{"voyages": []}'
+    outline, json_text = split_outline(text)
+    assert "write SCHEDULE: later" in outline
+    assert json_text == '{"voyages": []}'
+
+
+def test_generation_with_outline_returns_outline_and_schedule():
+    fake = FakeClient('OUTLINE:\nC1 via F2\nSCHEDULE:\n{"voyages": []}')
+    instance = load_instance(ROOT / "data" / "easy.json")
+    result = generate_candidate(fake, instance, model="m", system_prompt="Return JSON", outline=True)
+    system = fake.requests[0]["messages"][0]["content"]
+    assert system.startswith("Return JSON") and "SCHEDULE:" in system
+    assert result["outline"] == "C1 via F2"
+    assert result["schedule"] == {"voyages": []}

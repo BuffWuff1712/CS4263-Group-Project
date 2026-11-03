@@ -8,7 +8,7 @@ from time import time_ns
 
 from pydantic import ValidationError
 
-from planner import get_client, load_prompt
+from planner import _SCHEDULE_MARKER, get_client, load_prompt, split_outline
 from schemas import Schedule, Violation
 from openai import RateLimitError
 import simulator
@@ -125,7 +125,16 @@ def repair(
     format_recovery: bool = False,
     include_metadata: bool = False,
     request_timeout: float | None = None,
+    outline: bool = False,
+    previous_outline: str | None = None,
+    trace: dict | None = None,
 ) -> Schedule | tuple[Schedule, dict]:
+    """Ask the model for a revised schedule.
+
+    outline: ask for a plan outline before the JSON (returned in metadata["outline"]).
+    previous_outline: the outline behind previous_schedule, sent when outline is on.
+    trace: the simulator's vessel and shipment timelines for previous_schedule.
+    """
 
     # ======================================
     # 1. LOAD REPAIR PROMPT
@@ -134,12 +143,23 @@ def repair(
     repair_prompt = load_prompt(
         ROOT / "prompts" / "repair.txt"
     )
+    if trace is not None:
+        repair_prompt = repair_prompt.rstrip() + "\n\n" + load_prompt(ROOT / "prompts" / "repair_trace.txt")
+    if outline:
+        repair_prompt = repair_prompt.rstrip() + "\n\n" + load_prompt(ROOT / "prompts" / "repair_outline.txt")
 
     # ======================================
     # 2. PREPARE REPAIR INPUT
     # ======================================
 
-    repair_input = {
+    repair_input = {}
+    if outline:
+        # Repeat the format in the user turn, as the planner does.
+        repair_input["output_format"] = (
+            "Reply with OUTLINE: (the full updated outline, changed lines prefixed "
+            "CHANGED:), then a line SCHEDULE:, then only the JSON object with key voyages."
+        )
+    repair_input |= {
         "problem_instance": instance,
 
         "previous_schedule": previous_schedule.model_dump(),
@@ -150,6 +170,10 @@ def repair(
     }
     if additional_feedback:
         repair_input["delivery_preservation_warning"] = additional_feedback
+    if outline and previous_outline:
+        repair_input["previous_outline"] = previous_outline
+    if trace is not None:
+        repair_input["simulation_trace"] = trace
 
     # ======================================
     # 3. CALL LLM
@@ -186,10 +210,17 @@ def repair(
 
     content = response.choices[0].message.content or ""
     metadata = {"format_retries": 0, "finish_reason": response.choices[0].finish_reason}
+    if outline:
+        metadata["outline"], schedule_text = split_outline(content)
+        metadata["schedule_marker_found"] = bool(_SCHEDULE_MARKER.search(content))
+        if metadata["outline"] is None:
+            metadata["reply_start"] = content[:300]
+    else:
+        schedule_text = content
 
     try:
         revised_schedule, parse_metadata = parse_repair_response(
-            content, instance, recover=format_recovery,
+            schedule_text, instance, recover=format_recovery,
         )
     except ValueError as first_error:
         first_path = _save_failed_response(content)
@@ -199,6 +230,7 @@ def repair(
             ) from first_error
 
         # One bounded retry. The verifier still decides whether the result is feasible.
+        retry_input = {k: v for k, v in repair_input.items() if k != "output_format"}
         retry_request = dict(request)
         retry_request["messages"] = [
             {"role": "system", "content": (
@@ -206,12 +238,15 @@ def repair(
                 "Return only one complete JSON object with exactly the key voyages. "
                 "No explanation, Markdown, or additional schedules."
             )},
-            request["messages"][1],
+            {"role": "user", "content": json.dumps(retry_input, indent=2, ensure_ascii=False)},
         ]
         retry_response = call_with_retry(client=client, **retry_request)
         content = retry_response.choices[0].message.content or ""
         metadata.update(format_retries=1, first_failed_response=str(first_path),
                         finish_reason=retry_response.choices[0].finish_reason)
+        if outline:
+            # The retry asks for JSON only, so the first reply's outline no longer applies.
+            metadata["outline"] = None
         try:
             revised_schedule, parse_metadata = parse_repair_response(
                 content, instance, recover=True,

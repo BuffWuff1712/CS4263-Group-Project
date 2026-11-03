@@ -1,0 +1,16 @@
+OUTPUT FORMAT OVERRIDE (this replaces the "Output ONLY a JSON object" rule above):
+
+First write a short plan outline, then the schedule, in exactly this shape:
+
+OUTLINE:
+<one line per shipment: its route of ports, the vessel for each leg, and its deadline>
+<one line per vessel: the order of ports it visits>
+SCHEDULE:
+<the JSON object with exactly the key "voyages", and nothing after it>
+
+Example outline lines:
+C4 x4: Taicang -(V2)-> Shanghai -(V1)-> Rotterdam, deadline 140
+V1: Shanghai -> Rotterdam -> Shanghai
+
+Keep the outline brief. The JSON schedule must follow the outline exactly.
+The line "SCHEDULE:" must appear on its own line. Do not use code fences.

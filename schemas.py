@@ -36,3 +36,5 @@ class ValidationReport(BaseModel):
     delivered: dict[str, int] = Field(
         default_factory=dict
     )
+    # Vessel and shipment timelines; only filled when requested.
+    trace: Optional[dict] = None

@@ -365,7 +365,9 @@ def simulate_cargo_movements(instance, voyages, violations):
                     shipment.get("mandatory_stop") is None
                 ),
                 "delivered_at": None,
-                "history": [(0, shipment["origin"])]
+                "history": [(0, shipment["origin"])],
+                # One entry per completed leg, used by build_trace().
+                "trips": []
             }
 
             units[(shipment["id"], n)] = unit
@@ -495,6 +497,15 @@ def simulate_cargo_movements(instance, voyages, violations):
                 unit["history"].append(
                     (hour, voyage.destination)
                 )
+
+                unit["trips"].append({
+                    "voyage_index": i,
+                    "vessel_id": voyage.vessel_id,
+                    "from": voyage.origin,
+                    "depart_hour": voyage.depart_hour,
+                    "to": voyage.destination,
+                    "arrive_hour": hour,
+                })
 
                 # Mark mandatory stop as visited
                 if voyage.destination == stop:
@@ -1014,7 +1025,9 @@ def validate_cargo_splitting(instance, voyages, violations):
 
 def simulate(
     instance: dict,
-    schedule: Schedule
+    schedule: Schedule,
+    *,
+    with_trace: bool = False
 ) -> ValidationReport:
     """
     Validate an LLM-generated shipping schedule.
@@ -1023,6 +1036,7 @@ def simulate(
     - valid: True/False
     - violations: List of constraint violations
     - delivered: Delivered quantity per shipment
+    - trace: vessel and shipment timelines (only when with_trace=True)
     """
 
     violations = []
@@ -1066,5 +1080,138 @@ def simulate(
     return ValidationReport(
         valid=(len(violations) == 0),
         violations=violations,
-        delivered=delivered
+        delivered=delivered,
+        trace=(
+            build_trace(instance, voyages, cargo_state)
+            if with_trace else None
+        )
     )
+
+
+# ==========================================
+# 8. TRACE FOR THE REPAIR MODEL
+# ==========================================
+
+def build_trace(instance, voyages, cargo_state):
+    """
+    Summarise the replayed schedule so a model does not have to
+    reconstruct it.
+
+    vessels:   each vessel's voyages in departure order, with
+               departure and arrival hours and the cargo on board.
+    shipments: for each shipment, groups of units that took exactly
+               the same legs, and where they ended up.
+
+    Only hours where something happens (a departure or an arrival)
+    are listed, which keeps the trace short.
+    """
+
+    routes = {
+        (r["origin"], r["destination"]): r
+        for r in instance["routes"]
+    }
+
+    horizon = instance["planning_horizon_hours"]
+
+    # ---------- vessels ----------
+    vessels = {}
+
+    for vessel in instance["vessels"]:
+        own = sorted(
+            (
+                (i, voyage) for i, voyage in enumerate(voyages)
+                if voyage.vessel_id == vessel["id"]
+            ),
+            key=lambda item: (item[1].depart_hour, item[0])
+        )
+        legs = []
+        for i, voyage in own:
+            route = routes.get((voyage.origin, voyage.destination))
+            arrival = (
+                f"h{voyage.depart_hour + route['duration_hours']}"
+                if route else "?? (unknown route)"
+            )
+            cargo = ", ".join(
+                f"{load.shipment_id} x{load.quantity}"
+                for load in voyage.cargo
+            )
+            legs.append(
+                f"voyage {i}: {voyage.origin} h{voyage.depart_hour} -> "
+                f"{voyage.destination} {arrival}, "
+                + (f"carrying {cargo}" if cargo else "empty")
+            )
+
+        vessels[vessel["id"]] = {
+            "start_port": vessel["start_port"],
+            "capacity": vessel["capacity"],
+            "voyages_used": f"{len(legs)}/{vessel['max_voyages']}",
+            "legs": legs,
+        }
+
+    # ---------- shipments ----------
+    by_shipment = defaultdict(list)
+    for unit in cargo_state["unit_histories"].values():
+        by_shipment[unit["shipment_id"]].append(unit)
+
+    shipments = {}
+
+    for shipment in instance["shipments"]:
+        sid = shipment["id"]
+        deadline = shipment["deadline_hour"]
+
+        groups = {}
+        for unit in sorted(by_shipment[sid], key=lambda u: u["unit_id"]):
+            key = (
+                tuple(
+                    (t["voyage_index"], t["arrive_hour"])
+                    for t in unit["trips"]
+                ),
+                unit["delivered_at"],
+            )
+            if key not in groups:
+                groups[key] = {"units": 0, "unit": unit}
+            groups[key]["units"] += 1
+
+        entries = []
+        for group in groups.values():
+            unit = group["unit"]
+            delivered_at = unit["delivered_at"]
+            last_hour, last_port = unit["history"][-1]
+
+            if delivered_at is None:
+                status = (
+                    f"NOT DELIVERED: waiting at {last_port} "
+                    f"since hour {last_hour}"
+                )
+            elif delivered_at > deadline:
+                status = (
+                    f"LATE: delivered at hour {delivered_at}, "
+                    f"{delivered_at - deadline}h after deadline {deadline}"
+                )
+            else:
+                status = f"on time: delivered at hour {delivered_at}"
+
+            entries.append({
+                "units": group["units"],
+                "legs": [
+                    f"{t['vessel_id']} (voyage {t['voyage_index']}): "
+                    f"{t['from']} h{t['depart_hour']} -> {t['to']} h{t['arrive_hour']}"
+                    for t in unit["trips"]
+                ],
+                "status": status,
+            })
+
+        shipments[sid] = {
+            "route": f"{shipment['origin']} -> {shipment['destination']}",
+            "mandatory_stop": shipment.get("mandatory_stop"),
+            "quantity": shipment["quantity"],
+            "deadline_hour": deadline,
+            "delivered": cargo_state["delivered"].get(sid, 0),
+            "groups": entries,
+        }
+
+    return {
+        "planning_horizon_hours": horizon,
+        "vessels": vessels,
+        "shipments": shipments,
+    }

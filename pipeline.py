@@ -10,6 +10,7 @@ import planner
 import simulator
 import repair
 from feedback import format_feedback
+from safeguards import OUTLINE_MODES, SafeguardConfig
 
 from schemas import Schedule, ValidationReport
 
@@ -41,7 +42,16 @@ def run_pipeline(
     provider="openai", model=None, reasoning=None,
     safeguard=False, initial_schedule=None,
     resume_final=False, request_timeout=None,
+    outline="off", trace=False, config=None,
 ):
+    """Run plan -> simulate -> repair.
+
+    Safeguards come from `config` if given; otherwise from the flags:
+    safeguard (grounded feedback, output recovery, delivery preservation),
+    outline ("off", "fresh" or "rolling") and trace.
+    """
+    if config is None:
+        config = SafeguardConfig.from_flags(safeguard=safeguard, outline=outline, trace=trace)
 
     # ======================================
     # 1. LOAD PROBLEM INSTANCE
@@ -73,6 +83,7 @@ def run_pipeline(
             instance=instance,
             model=model,
             reasoning=reasoning,
+            outline=config.uses_outline,
         )
     else:
         saved = json.loads(Path(initial_schedule).read_text(encoding="utf-8"))
@@ -89,6 +100,20 @@ def run_pipeline(
             "model": model,
             "usage": None,
             "finish_reason": "reused_initial_schedule",
+            "outline": None,
+        }
+
+    def planner_metadata():
+        return {
+            "model": candidate["model"],
+            "usage": candidate["usage"],
+            "finish_reason": candidate["finish_reason"],
+            "initial_schedule": str(initial_schedule) if initial_schedule else None,
+            "safeguard": config.grounded_feedback and config.output_recovery and config.delivery_preservation,
+            "safeguards": config.to_dict(),
+            "outline": candidate.get("outline"),
+            "resume_final": resume_final,
+            "request_timeout": request_timeout,
         }
 
     # Check if planner returned a parseable schedule
@@ -107,14 +132,19 @@ def run_pipeline(
                     "attempt": 0,
                     "stage": "plan",
                     "raw_response": candidate["raw_response"],
-                    "parse_error": candidate["parse_error"]
+                    "parse_error": candidate["parse_error"],
+                    "outline": candidate.get("outline")
                 }
-            ]
+            ],
+            "planner_metadata": planner_metadata(),
         }
 
     schedule = Schedule.model_validate(
         candidate["schedule"]
     )
+
+    # The outline that matches the current accepted schedule.
+    current_outline = candidate.get("outline")
 
     # ======================================
     # 3. SIMULATE - REPAIR LOOP
@@ -124,7 +154,7 @@ def run_pipeline(
 
         # SIMULATE
         report = ValidationReport.model_validate(
-            simulator.simulate(instance, schedule)
+            simulator.simulate(instance, schedule, with_trace=config.trace)
         )
 
         # Record results
@@ -134,6 +164,8 @@ def run_pipeline(
             "schedule": schedule.model_dump(),
             "validation": report.model_dump()
         })
+        if config.uses_outline:
+            history[-1]["outline"] = current_outline
 
         print(f"\nAttempt {attempt}")
         print(f"Valid: {report.valid}")
@@ -151,7 +183,7 @@ def run_pipeline(
 
         feedback = (
             format_feedback(report.violations, instance=instance, schedule=schedule)
-            if safeguard else [v.model_dump() for v in report.violations]
+            if config.grounded_feedback else [v.model_dump() for v in report.violations]
         )
         history[-1]["repair_feedback"] = feedback
 
@@ -169,14 +201,17 @@ def run_pipeline(
                 reasoning=reasoning,
                 feedback=feedback,
                 additional_feedback=regression_warning,
-                format_recovery=safeguard,
+                format_recovery=config.output_recovery,
                 include_metadata=True,
                 request_timeout=request_timeout,
+                outline=config.uses_outline,
+                previous_outline=current_outline if config.outline == "rolling" else None,
+                trace=report.trace if config.trace else None,
             )
             history[-1]["repair_metadata"] = repair_metadata
 
             revised_schedule = Schedule.model_validate(revised_schedule)
-            if safeguard:
+            if config.delivery_preservation:
                 revised_report = ValidationReport.model_validate(
                     simulator.simulate(instance, revised_schedule)
                 )
@@ -203,6 +238,8 @@ def run_pipeline(
                 history[-1]["delivery_preservation"] = {"accepted": True, "lost_shipments": []}
             regression_warning = None
             schedule = revised_schedule
+            if config.uses_outline:
+                current_outline = repair_metadata.get("outline")
 
         except (ValueError, TypeError, APIError) as exc:
 
@@ -221,7 +258,8 @@ def run_pipeline(
                 "status": "api_failed" if isinstance(exc, APIError) else "repair_failed",
                 "schedule": schedule.model_dump(),
                 "validation": report.model_dump(),
-                "attempts": history
+                "attempts": history,
+                "planner_metadata": planner_metadata(),
             }
 
     # ======================================
@@ -234,15 +272,7 @@ def run_pipeline(
         "schedule": schedule.model_dump(),
         "validation": report.model_dump(),
         "attempts": history,
-        "planner_metadata": {
-            "model": candidate["model"],
-            "usage": candidate["usage"],
-            "finish_reason": candidate["finish_reason"],
-            "initial_schedule": str(initial_schedule) if initial_schedule else None,
-            "safeguard": safeguard,
-            "resume_final": resume_final,
-            "request_timeout": request_timeout,
-        }
+        "planner_metadata": planner_metadata(),
     }
 
 
@@ -259,6 +289,11 @@ if __name__ == "__main__":
     parser.add_argument("--max-repairs", type=int, default=MAX_REPAIRS)
     parser.add_argument("--reasoning-effort", help="Use only with a model that supports this setting")
     parser.add_argument("--safeguard", action="store_true", help="Use grounded feedback, output recovery, and delivery preservation")
+    parser.add_argument("--outline", choices=OUTLINE_MODES, default="off",
+                        help="Ask for a plan outline before the JSON. fresh: every call writes its own; "
+                             "rolling: each repair also receives the current outline")
+    parser.add_argument("--trace", action="store_true",
+                        help="Send the simulator's vessel and shipment timelines to the repair model")
     parser.add_argument("--initial-schedule", type=Path, help="Reuse a saved pipeline result or schedule for a controlled comparison")
     parser.add_argument("--resume-final", action="store_true", help="Use the final accepted schedule from --initial-schedule")
     parser.add_argument("--request-timeout", type=float, help="Seconds to wait for each model response")
@@ -276,6 +311,7 @@ if __name__ == "__main__":
         safeguard=args.safeguard, initial_schedule=args.initial_schedule,
         resume_final=args.resume_final,
         request_timeout=args.request_timeout,
+        outline=args.outline, trace=args.trace,
     )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
