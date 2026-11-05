@@ -3,3 +3,10 @@
 .env.local
 .env.*.local
 *.env
+
+# Generated Python files and local Qwen experiments
+__pycache__/
+*.py[cod]
+results/qwen_quick/
+results/
+

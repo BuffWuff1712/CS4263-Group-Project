@@ -1,0 +1,13 @@
+SIMULATION TRACE:
+
+The input includes simulation_trace, produced by the verifier replaying
+previous_schedule. Use it instead of reconstructing movements yourself:
+
+- vessels: each vessel's voyages in time order, with departure and arrival
+  hours and the cargo on board.
+- shipments: for each shipment, groups of container units that moved
+  together, the legs they took, and their final status (delivered on time,
+  delivered late, or not delivered and where they are waiting).
+
+Use the trace to find where each problem starts, then change only what is
+needed to fix it.

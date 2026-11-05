@@ -1,0 +1,3060 @@
+{
+  "success": false,
+  "status": "max_repairs",
+  "schedule": {
+    "voyages": [
+      {
+        "vessel_id": "V2",
+        "origin": "Nantong",
+        "destination": "Taicang",
+        "depart_hour": 0,
+        "cargo": [
+          {
+            "shipment_id": "C1",
+            "quantity": 4
+          }
+        ]
+      },
+      {
+        "vessel_id": "V2",
+        "origin": "Taicang",
+        "destination": "Nantong",
+        "depart_hour": 8,
+        "cargo": [
+          {
+            "shipment_id": "C1",
+            "quantity": 4
+          }
+        ]
+      },
+      {
+        "vessel_id": "V2",
+        "origin": "Nantong",
+        "destination": "Taicang",
+        "depart_hour": 18,
+        "cargo": [
+          {
+            "shipment_id": "C3",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "vessel_id": "V3",
+        "origin": "Hamburg",
+        "destination": "Felixstowe",
+        "depart_hour": 0,
+        "cargo": [
+          {
+            "shipment_id": "C2",
+            "quantity": 3
+          },
+          {
+            "shipment_id": "C10",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "vessel_id": "V3",
+        "origin": "Felixstowe",
+        "destination": "Rotterdam",
+        "depart_hour": 12,
+        "cargo": [
+          {
+            "shipment_id": "C10",
+            "quantity": 3
+          }
+        ]
+      },
+      {
+        "vessel_id": "V3",
+        "origin": "Rotterdam",
+        "destination": "Hamburg",
+        "depart_hour": 42,
+        "cargo": [
+          {
+            "shipment_id": "C10",
+            "quantity": 3
+          },
+          {
+            "shipment_id": "C11",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "vessel_id": "V3",
+        "origin": "Hamburg",
+        "destination": "Felixstowe",
+        "depart_hour": 49,
+        "cargo": [
+          {
+            "shipment_id": "C11",
+            "quantity": 2
+          }
+        ]
+      },
+      {
+        "vessel_id": "V3",
+        "origin": "Felixstowe",
+        "destination": "Rotterdam",
+        "depart_hour": 61,
+        "cargo": []
+      },
+      {
+        "vessel_id": "V3",
+        "origin": "Rotterdam",
+        "destination": "Hamburg",
+        "depart_hour": 91,
+        "cargo": []
+      },
+      {
+        "vessel_id": "V3",
+        "origin": "Hamburg",
+        "destination": "Felixstowe",
+        "depart_hour": 98,
+        "cargo": []
+      },
+      {
+        "vessel_id": "V1",
+        "origin": "Shanghai",
+        "destination": "Jebel Ali",
+        "depart_hour": 0,
+        "cargo": [
+          {
+            "shipment_id": "C5",
+            "quantity": 2
+          },
+          {
+            "shipment_id": "C12",
+            "quantity": 1
+          },
+          {
+            "shipment_id": "C15",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "vessel_id": "V1",
+        "origin": "Jebel Ali",
+        "destination": "Shanghai",
+        "depart_hour": 30,
+        "cargo": [
+          {
+            "shipment_id": "C15",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "vessel_id": "V1",
+        "origin": "Shanghai",
+        "destination": "Jebel Ali",
+        "depart_hour": 60,
+        "cargo": []
+      },
+      {
+        "vessel_id": "V1",
+        "origin": "Jebel Ali",
+        "destination": "Rotterdam",
+        "depart_hour": 90,
+        "cargo": [
+          {
+            "shipment_id": "C16",
+            "quantity": 4
+          },
+          {
+            "shipment_id": "C17",
+            "quantity": 6
+          }
+        ]
+      },
+      {
+        "vessel_id": "V1",
+        "origin": "Rotterdam",
+        "destination": "Shanghai",
+        "depart_hour": 120,
+        "cargo": [
+          {
+            "shipment_id": "C4",
+            "quantity": 6
+          }
+        ]
+      },
+      {
+        "vessel_id": "V1",
+        "origin": "Shanghai",
+        "destination": "Jebel Ali",
+        "depart_hour": 150,
+        "cargo": []
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Jebel Ali",
+        "destination": "Sharjah",
+        "depart_hour": 0,
+        "cargo": [
+          {
+            "shipment_id": "C13",
+            "quantity": 4
+          }
+        ]
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Sharjah",
+        "destination": "Ajman",
+        "depart_hour": 5,
+        "cargo": [
+          {
+            "shipment_id": "C13",
+            "quantity": 4
+          }
+        ]
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Ajman",
+        "destination": "Jebel Ali",
+        "depart_hour": 7,
+        "cargo": []
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Jebel Ali",
+        "destination": "Rotterdam",
+        "depart_hour": 13,
+        "cargo": [
+          {
+            "shipment_id": "C14",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Rotterdam",
+        "destination": "Jebel Ali",
+        "depart_hour": 43,
+        "cargo": []
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Jebel Ali",
+        "destination": "Rotterdam",
+        "depart_hour": 73,
+        "cargo": [
+          {
+            "shipment_id": "C8",
+            "quantity": 4
+          }
+        ]
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Rotterdam",
+        "destination": "Jebel Ali",
+        "depart_hour": 103,
+        "cargo": [
+          {
+            "shipment_id": "C9",
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "vessel_id": "V4",
+        "origin": "Jebel Ali",
+        "destination": "Shanghai",
+        "depart_hour": 133,
+        "cargo": [
+          {
+            "shipment_id": "C9",
+            "quantity": 5
+          }
+        ]
+      }
+    ]
+  },
+  "validation": {
+    "valid": false,
+    "violations": [
+      {
+        "constraint": "C1",
+        "message": "Invalid route: Rotterdam -> Shanghai",
+        "vessel_id": "V1",
+        "shipment_id": null,
+        "voyage_index": 14
+      },
+      {
+        "constraint": "C1",
+        "message": "Cannot calculate arrival: invalid route",
+        "vessel_id": "V1",
+        "shipment_id": null,
+        "voyage_index": 14
+      },
+      {
+        "constraint": "C3",
+        "message": "Vessel expected at Rotterdam, but departs from Shanghai",
+        "vessel_id": "V1",
+        "shipment_id": null,
+        "voyage_index": 15
+      },
+      {
+        "constraint": "C1",
+        "message": "Unknown route; cargo cannot be simulated",
+        "vessel_id": "V1",
+        "shipment_id": null,
+        "voyage_index": 14
+      },
+      {
+        "constraint": "C2",
+        "message": "Vessel type not allowed on route",
+        "vessel_id": "V4",
+        "shipment_id": null,
+        "voyage_index": 19
+      },
+      {
+        "constraint": "C2",
+        "message": "Vessel type not allowed on route",
+        "vessel_id": "V4",
+        "shipment_id": null,
+        "voyage_index": 20
+      },
+      {
+        "constraint": "C2",
+        "message": "Vessel type not allowed on route",
+        "vessel_id": "V4",
+        "shipment_id": null,
+        "voyage_index": 21
+      },
+      {
+        "constraint": "C2",
+        "message": "Vessel type not allowed on route",
+        "vessel_id": "V4",
+        "shipment_id": null,
+        "voyage_index": 22
+      },
+      {
+        "constraint": "C2",
+        "message": "Vessel type not allowed on route",
+        "vessel_id": "V4",
+        "shipment_id": null,
+        "voyage_index": 23
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Nantong; requested 4",
+        "vessel_id": "V2",
+        "shipment_id": "C1",
+        "voyage_index": 0
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Hamburg; requested 3",
+        "vessel_id": "V3",
+        "shipment_id": "C10",
+        "voyage_index": 3
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Shanghai; requested 5",
+        "vessel_id": "V1",
+        "shipment_id": "C15",
+        "voyage_index": 10
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Jebel Ali; requested 4",
+        "vessel_id": "V4",
+        "shipment_id": "C13",
+        "voyage_index": 16
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Jebel Ali; requested 5",
+        "vessel_id": "V1",
+        "shipment_id": "C15",
+        "voyage_index": 11
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Rotterdam; requested 3",
+        "vessel_id": "V3",
+        "shipment_id": "C10",
+        "voyage_index": 5
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Rotterdam; requested 2",
+        "vessel_id": "V3",
+        "shipment_id": "C11",
+        "voyage_index": 5
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Hamburg; requested 2",
+        "vessel_id": "V3",
+        "shipment_id": "C11",
+        "voyage_index": 6
+      },
+      {
+        "constraint": "C7",
+        "message": "Only 0 units available at Jebel Ali; requested 4",
+        "vessel_id": "V1",
+        "shipment_id": "C16",
+        "voyage_index": 13
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/3 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C3",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/6 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C4",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/2 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C5",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/3 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C6",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/6 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C7",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/4 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C8",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/5 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C9",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 3/6 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C10",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/2 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C11",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/1 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C12",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/5 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C14",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/5 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C15",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/4 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C16",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/6 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C17",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C11",
+        "message": "Incomplete delivery: 0/3 units delivered",
+        "vessel_id": null,
+        "shipment_id": "C18",
+        "voyage_index": null
+      },
+      {
+        "constraint": "C8",
+        "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+        "vessel_id": "V3",
+        "shipment_id": "C10",
+        "voyage_index": 3
+      },
+      {
+        "constraint": "C8",
+        "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+        "vessel_id": "V3",
+        "shipment_id": "C10",
+        "voyage_index": 4
+      },
+      {
+        "constraint": "C8",
+        "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+        "vessel_id": "V3",
+        "shipment_id": "C10",
+        "voyage_index": 5
+      }
+    ],
+    "delivered": {
+      "C1": 4,
+      "C2": 3,
+      "C3": 0,
+      "C4": 0,
+      "C5": 0,
+      "C6": 0,
+      "C7": 0,
+      "C8": 0,
+      "C9": 0,
+      "C10": 3,
+      "C11": 0,
+      "C12": 0,
+      "C13": 4,
+      "C14": 0,
+      "C15": 0,
+      "C16": 0,
+      "C17": 0,
+      "C18": 0
+    }
+  },
+  "attempts": [
+    {
+      "attempt": 0,
+      "stage": "plan",
+      "schedule": {
+        "voyages": [
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C5",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C7",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C12",
+                "quantity": 1
+              },
+              {
+                "shipment_id": "C17",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 30,
+            "cargo": [
+              {
+                "shipment_id": "C5",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C7",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C12",
+                "quantity": 1
+              },
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              },
+              {
+                "shipment_id": "C4",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 60,
+            "cargo": [
+              {
+                "shipment_id": "C8",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C9",
+                "quantity": 5
+              },
+              {
+                "shipment_id": "C16",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Shanghai",
+            "depart_hour": 90,
+            "cargo": [
+              {
+                "shipment_id": "C8",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C9",
+                "quantity": 5
+              },
+              {
+                "shipment_id": "C16",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C15",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 120,
+            "cargo": [
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 150,
+            "cargo": [
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Taicang",
+            "destination": "Nantong",
+            "depart_hour": 8,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 18,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Taicang",
+            "destination": "Nantong",
+            "depart_hour": 26,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Shanghai",
+            "depart_hour": 31,
+            "cargo": [
+              {
+                "shipment_id": "C3",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Shanghai",
+            "destination": "Nantong",
+            "depart_hour": 41,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 51,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C2",
+                "quantity": 3
+              },
+              {
+                "shipment_id": "C10",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Rotterdam",
+            "depart_hour": 12,
+            "cargo": [
+              {
+                "shipment_id": "C10",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Rotterdam",
+            "destination": "Hamburg",
+            "depart_hour": 16,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 23,
+            "cargo": [
+              {
+                "shipment_id": "C10",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Rotterdam",
+            "depart_hour": 35,
+            "cargo": [
+              {
+                "shipment_id": "C10",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Sharjah",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Sharjah",
+            "destination": "Ajman",
+            "depart_hour": 5,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Ajman",
+            "destination": "Jebel Ali",
+            "depart_hour": 7,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Ajman",
+            "depart_hour": 13,
+            "cargo": [
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Ajman",
+            "destination": "Jebel Ali",
+            "depart_hour": 15,
+            "cargo": [
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 21,
+            "cargo": [
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 51,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Sharjah",
+            "depart_hour": 81,
+            "cargo": [
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "valid": false,
+        "violations": [
+          {
+            "constraint": "C5",
+            "message": "Vessel unavailable until hour 19, but departs at hour 15",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 22
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 23
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 24
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C7",
+            "voyage_index": 0
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 6",
+            "vessel_id": "V1",
+            "shipment_id": "C17",
+            "voyage_index": 0
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Nantong; requested 4",
+            "vessel_id": "V2",
+            "shipment_id": "C1",
+            "voyage_index": 6
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Hamburg; requested 3",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 13
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V4",
+            "shipment_id": "C13",
+            "voyage_index": 18
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 5",
+            "vessel_id": "V4",
+            "shipment_id": "C14",
+            "voyage_index": 21
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Hamburg; requested 3",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 16
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C7",
+            "voyage_index": 1
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 6",
+            "vessel_id": "V1",
+            "shipment_id": "C4",
+            "voyage_index": 1
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C9",
+            "voyage_index": 2
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C16",
+            "voyage_index": 2
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 3",
+            "vessel_id": "V4",
+            "shipment_id": "C18",
+            "voyage_index": 25
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C9",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C16",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C15",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 2",
+            "vessel_id": "V1",
+            "shipment_id": "C11",
+            "voyage_index": 4
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 3",
+            "vessel_id": "V1",
+            "shipment_id": "C18",
+            "voyage_index": 4
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 2",
+            "vessel_id": "V1",
+            "shipment_id": "C11",
+            "voyage_index": 5
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 3",
+            "vessel_id": "V1",
+            "shipment_id": "C18",
+            "voyage_index": 5
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C4",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C5",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C6",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C7",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C8",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C9",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C11",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/1 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C12",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C15",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C16",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C17",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C18",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Cargo unit 1 delivered at hour 41, exceeding deadline 36",
+            "vessel_id": null,
+            "shipment_id": "C3",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Cargo unit 2 delivered at hour 41, exceeding deadline 36",
+            "vessel_id": null,
+            "shipment_id": "C3",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Cargo unit 3 delivered at hour 41, exceeding deadline 36",
+            "vessel_id": null,
+            "shipment_id": "C3",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C7 requires 6 units, but voyage carries 4 units",
+            "vessel_id": "V1",
+            "shipment_id": "C7",
+            "voyage_index": 0
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C7 requires 6 units, but voyage carries 4 units",
+            "vessel_id": "V1",
+            "shipment_id": "C7",
+            "voyage_index": 1
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 13
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 14
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 16
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 17
+          }
+        ],
+        "delivered": {
+          "C1": 4,
+          "C2": 3,
+          "C3": 3,
+          "C4": 0,
+          "C5": 0,
+          "C6": 0,
+          "C7": 0,
+          "C8": 0,
+          "C9": 0,
+          "C10": 6,
+          "C11": 0,
+          "C12": 0,
+          "C13": 4,
+          "C14": 5,
+          "C15": 0,
+          "C16": 0,
+          "C17": 0,
+          "C18": 0
+        }
+      }
+    },
+    {
+      "attempt": 1,
+      "stage": "repair",
+      "schedule": {
+        "voyages": [
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C5",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C12",
+                "quantity": 1
+              },
+              {
+                "shipment_id": "C17",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 30,
+            "cargo": [
+              {
+                "shipment_id": "C5",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C12",
+                "quantity": 1
+              },
+              {
+                "shipment_id": "C7",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 60,
+            "cargo": [
+              {
+                "shipment_id": "C8",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C9",
+                "quantity": 5
+              },
+              {
+                "shipment_id": "C16",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Shanghai",
+            "depart_hour": 90,
+            "cargo": [
+              {
+                "shipment_id": "C8",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C9",
+                "quantity": 5
+              },
+              {
+                "shipment_id": "C16",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C15",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 120,
+            "cargo": [
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 150,
+            "cargo": [
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Shanghai",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C3",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Shanghai",
+            "destination": "Taicang",
+            "depart_hour": 10,
+            "cargo": [
+              {
+                "shipment_id": "C3",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Taicang",
+            "destination": "Nantong",
+            "depart_hour": 18,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 23,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Taicang",
+            "destination": "Nantong",
+            "depart_hour": 28,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C2",
+                "quantity": 3
+              },
+              {
+                "shipment_id": "C10",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Rotterdam",
+            "depart_hour": 12,
+            "cargo": [
+              {
+                "shipment_id": "C10",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Rotterdam",
+            "destination": "Hamburg",
+            "depart_hour": 16,
+            "cargo": [
+              {
+                "shipment_id": "C6",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 23,
+            "cargo": [
+              {
+                "shipment_id": "C6",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Rotterdam",
+            "depart_hour": 35,
+            "cargo": [
+              {
+                "shipment_id": "C6",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Sharjah",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Sharjah",
+            "destination": "Ajman",
+            "depart_hour": 5,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Ajman",
+            "destination": "Jebel Ali",
+            "depart_hour": 7,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 13,
+            "cargo": [
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 43,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Sharjah",
+            "depart_hour": 48,
+            "cargo": [
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Sharjah",
+            "destination": "Ajman",
+            "depart_hour": 53,
+            "cargo": [
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Ajman",
+            "destination": "Rotterdam",
+            "depart_hour": 55,
+            "cargo": [
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "valid": false,
+        "violations": [
+          {
+            "constraint": "C1",
+            "message": "Invalid route: Ajman -> Rotterdam",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 23
+          },
+          {
+            "constraint": "C5",
+            "message": "Vessel unavailable until hour 73, but departs at hour 48",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 21
+          },
+          {
+            "constraint": "C1",
+            "message": "Cannot calculate arrival: invalid route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 23
+          },
+          {
+            "constraint": "C6",
+            "message": "Capacity exceeded: 9 > 6",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 11
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 19
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 20
+          },
+          {
+            "constraint": "C1",
+            "message": "Unknown route; cargo cannot be simulated",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 23
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 6",
+            "vessel_id": "V1",
+            "shipment_id": "C17",
+            "voyage_index": 0
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Hamburg; requested 6",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 11
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V4",
+            "shipment_id": "C13",
+            "voyage_index": 16
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 3",
+            "vessel_id": "V2",
+            "shipment_id": "C3",
+            "voyage_index": 7
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 3",
+            "vessel_id": "V3",
+            "shipment_id": "C6",
+            "voyage_index": 13
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Nantong; requested 4",
+            "vessel_id": "V2",
+            "shipment_id": "C1",
+            "voyage_index": 9
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Hamburg; requested 3",
+            "vessel_id": "V3",
+            "shipment_id": "C6",
+            "voyage_index": 14
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 6",
+            "vessel_id": "V1",
+            "shipment_id": "C7",
+            "voyage_index": 1
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Felixstowe; requested 3",
+            "vessel_id": "V3",
+            "shipment_id": "C6",
+            "voyage_index": 15
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 3",
+            "vessel_id": "V4",
+            "shipment_id": "C18",
+            "voyage_index": 21
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Sharjah; requested 3",
+            "vessel_id": "V4",
+            "shipment_id": "C18",
+            "voyage_index": 22
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C9",
+            "voyage_index": 2
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C16",
+            "voyage_index": 2
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C9",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C16",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C15",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 2",
+            "vessel_id": "V1",
+            "shipment_id": "C11",
+            "voyage_index": 4
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 3",
+            "vessel_id": "V1",
+            "shipment_id": "C18",
+            "voyage_index": 4
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 2",
+            "vessel_id": "V1",
+            "shipment_id": "C11",
+            "voyage_index": 5
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 3",
+            "vessel_id": "V1",
+            "shipment_id": "C18",
+            "voyage_index": 5
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C4",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C5",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C6",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C7",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C8",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C9",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C11",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/1 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C12",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C14",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C15",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C16",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C17",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C18",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Cargo unit 1 delivered at hour 33, exceeding deadline 30",
+            "vessel_id": null,
+            "shipment_id": "C1",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Cargo unit 2 delivered at hour 33, exceeding deadline 30",
+            "vessel_id": null,
+            "shipment_id": "C1",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Cargo unit 3 delivered at hour 33, exceeding deadline 30",
+            "vessel_id": null,
+            "shipment_id": "C1",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Cargo unit 4 delivered at hour 33, exceeding deadline 30",
+            "vessel_id": null,
+            "shipment_id": "C1",
+            "voyage_index": null
+          }
+        ],
+        "delivered": {
+          "C1": 4,
+          "C2": 3,
+          "C3": 3,
+          "C4": 0,
+          "C5": 0,
+          "C6": 0,
+          "C7": 0,
+          "C8": 0,
+          "C9": 0,
+          "C10": 6,
+          "C11": 0,
+          "C12": 0,
+          "C13": 4,
+          "C14": 0,
+          "C15": 0,
+          "C16": 0,
+          "C17": 0,
+          "C18": 0
+        }
+      }
+    },
+    {
+      "attempt": 2,
+      "stage": "repair",
+      "schedule": {
+        "voyages": [
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C5",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C12",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 30,
+            "cargo": [
+              {
+                "shipment_id": "C5",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C12",
+                "quantity": 1
+              },
+              {
+                "shipment_id": "C15",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 60,
+            "cargo": [
+              {
+                "shipment_id": "C16",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C17",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Shanghai",
+            "depart_hour": 90,
+            "cargo": [
+              {
+                "shipment_id": "C16",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C17",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C3",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Taicang",
+            "destination": "Nantong",
+            "depart_hour": 13,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 18,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Taicang",
+            "destination": "Nantong",
+            "depart_hour": 26,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C2",
+                "quantity": 3
+              },
+              {
+                "shipment_id": "C10",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Rotterdam",
+            "depart_hour": 12,
+            "cargo": [
+              {
+                "shipment_id": "C10",
+                "quantity": 6
+              },
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Rotterdam",
+            "destination": "Felixstowe",
+            "depart_hour": 16,
+            "cargo": [
+              {
+                "shipment_id": "C18",
+                "quantity": 3
+              },
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Hamburg",
+            "depart_hour": 28,
+            "cargo": [
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C7",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Shanghai",
+            "depart_hour": 40,
+            "cargo": [
+              {
+                "shipment_id": "C7",
+                "quantity": 6
+              },
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Shanghai",
+            "destination": "Taicang",
+            "depart_hour": 70,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Taicang",
+            "destination": "Shanghai",
+            "depart_hour": 78,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Sharjah",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Sharjah",
+            "destination": "Ajman",
+            "depart_hour": 5,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Ajman",
+            "destination": "Jebel Ali",
+            "depart_hour": 7,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 13,
+            "cargo": [
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              },
+              {
+                "shipment_id": "C9",
+                "quantity": 5
+              },
+              {
+                "shipment_id": "C4",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 43,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 73,
+            "cargo": [
+              {
+                "shipment_id": "C8",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Rotterdam",
+            "destination": "Taicang",
+            "depart_hour": 103,
+            "cargo": [
+              {
+                "shipment_id": "C8",
+                "quantity": 4
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "valid": false,
+        "violations": [
+          {
+            "constraint": "C1",
+            "message": "Invalid route: Hamburg -> Shanghai",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 12
+          },
+          {
+            "constraint": "C1",
+            "message": "Invalid route: Rotterdam -> Taicang",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 21
+          },
+          {
+            "constraint": "C1",
+            "message": "Cannot calculate arrival: invalid route",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 12
+          },
+          {
+            "constraint": "C3",
+            "message": "Vessel expected at Hamburg, but departs from Shanghai",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 13
+          },
+          {
+            "constraint": "C1",
+            "message": "Cannot calculate arrival: invalid route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 21
+          },
+          {
+            "constraint": "C6",
+            "message": "Capacity exceeded: 7 > 6",
+            "vessel_id": "V2",
+            "shipment_id": null,
+            "voyage_index": 4
+          },
+          {
+            "constraint": "C6",
+            "message": "Capacity exceeded: 9 > 6",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 8
+          },
+          {
+            "constraint": "C6",
+            "message": "Capacity exceeded: 9 > 6",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 9
+          },
+          {
+            "constraint": "C6",
+            "message": "Capacity exceeded: 8 > 6",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 11
+          },
+          {
+            "constraint": "C6",
+            "message": "Capacity exceeded: 11 > 6",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 12
+          },
+          {
+            "constraint": "C6",
+            "message": "Capacity exceeded: 16 > 6",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 18
+          },
+          {
+            "constraint": "C1",
+            "message": "Unknown route; cargo cannot be simulated",
+            "vessel_id": "V3",
+            "shipment_id": null,
+            "voyage_index": 12
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 18
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 19
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 20
+          },
+          {
+            "constraint": "C1",
+            "message": "Unknown route; cargo cannot be simulated",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 21
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Nantong; requested 4",
+            "vessel_id": "V2",
+            "shipment_id": "C1",
+            "voyage_index": 4
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Hamburg; requested 6",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 8
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V4",
+            "shipment_id": "C13",
+            "voyage_index": 15
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 2",
+            "vessel_id": "V3",
+            "shipment_id": "C11",
+            "voyage_index": 10
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Felixstowe; requested 6",
+            "vessel_id": "V3",
+            "shipment_id": "C7",
+            "voyage_index": 11
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C15",
+            "voyage_index": 1
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C16",
+            "voyage_index": 2
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 6",
+            "vessel_id": "V1",
+            "shipment_id": "C17",
+            "voyage_index": 2
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C16",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C3",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C4",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C5",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C6",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C7",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C8",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C9",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C11",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/1 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C12",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C14",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C15",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C16",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C17",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C18",
+            "voyage_index": null
+          }
+        ],
+        "delivered": {
+          "C1": 4,
+          "C2": 3,
+          "C3": 0,
+          "C4": 0,
+          "C5": 0,
+          "C6": 0,
+          "C7": 0,
+          "C8": 0,
+          "C9": 0,
+          "C10": 6,
+          "C11": 0,
+          "C12": 0,
+          "C13": 4,
+          "C14": 0,
+          "C15": 0,
+          "C16": 0,
+          "C17": 0,
+          "C18": 0
+        }
+      }
+    },
+    {
+      "attempt": 3,
+      "stage": "repair",
+      "schedule": {
+        "voyages": [
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Taicang",
+            "destination": "Nantong",
+            "depart_hour": 8,
+            "cargo": [
+              {
+                "shipment_id": "C1",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V2",
+            "origin": "Nantong",
+            "destination": "Taicang",
+            "depart_hour": 18,
+            "cargo": [
+              {
+                "shipment_id": "C3",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C2",
+                "quantity": 3
+              },
+              {
+                "shipment_id": "C10",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Rotterdam",
+            "depart_hour": 12,
+            "cargo": [
+              {
+                "shipment_id": "C10",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Rotterdam",
+            "destination": "Hamburg",
+            "depart_hour": 42,
+            "cargo": [
+              {
+                "shipment_id": "C10",
+                "quantity": 3
+              },
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 49,
+            "cargo": [
+              {
+                "shipment_id": "C11",
+                "quantity": 2
+              }
+            ]
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Felixstowe",
+            "destination": "Rotterdam",
+            "depart_hour": 61,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Rotterdam",
+            "destination": "Hamburg",
+            "depart_hour": 91,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V3",
+            "origin": "Hamburg",
+            "destination": "Felixstowe",
+            "depart_hour": 98,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C5",
+                "quantity": 2
+              },
+              {
+                "shipment_id": "C12",
+                "quantity": 1
+              },
+              {
+                "shipment_id": "C15",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Shanghai",
+            "depart_hour": 30,
+            "cargo": [
+              {
+                "shipment_id": "C15",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 60,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 90,
+            "cargo": [
+              {
+                "shipment_id": "C16",
+                "quantity": 4
+              },
+              {
+                "shipment_id": "C17",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Rotterdam",
+            "destination": "Shanghai",
+            "depart_hour": 120,
+            "cargo": [
+              {
+                "shipment_id": "C4",
+                "quantity": 6
+              }
+            ]
+          },
+          {
+            "vessel_id": "V1",
+            "origin": "Shanghai",
+            "destination": "Jebel Ali",
+            "depart_hour": 150,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Sharjah",
+            "depart_hour": 0,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Sharjah",
+            "destination": "Ajman",
+            "depart_hour": 5,
+            "cargo": [
+              {
+                "shipment_id": "C13",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Ajman",
+            "destination": "Jebel Ali",
+            "depart_hour": 7,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 13,
+            "cargo": [
+              {
+                "shipment_id": "C14",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 43,
+            "cargo": []
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Rotterdam",
+            "depart_hour": 73,
+            "cargo": [
+              {
+                "shipment_id": "C8",
+                "quantity": 4
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Rotterdam",
+            "destination": "Jebel Ali",
+            "depart_hour": 103,
+            "cargo": [
+              {
+                "shipment_id": "C9",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "vessel_id": "V4",
+            "origin": "Jebel Ali",
+            "destination": "Shanghai",
+            "depart_hour": 133,
+            "cargo": [
+              {
+                "shipment_id": "C9",
+                "quantity": 5
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "valid": false,
+        "violations": [
+          {
+            "constraint": "C1",
+            "message": "Invalid route: Rotterdam -> Shanghai",
+            "vessel_id": "V1",
+            "shipment_id": null,
+            "voyage_index": 14
+          },
+          {
+            "constraint": "C1",
+            "message": "Cannot calculate arrival: invalid route",
+            "vessel_id": "V1",
+            "shipment_id": null,
+            "voyage_index": 14
+          },
+          {
+            "constraint": "C3",
+            "message": "Vessel expected at Rotterdam, but departs from Shanghai",
+            "vessel_id": "V1",
+            "shipment_id": null,
+            "voyage_index": 15
+          },
+          {
+            "constraint": "C1",
+            "message": "Unknown route; cargo cannot be simulated",
+            "vessel_id": "V1",
+            "shipment_id": null,
+            "voyage_index": 14
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 19
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 20
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 21
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 22
+          },
+          {
+            "constraint": "C2",
+            "message": "Vessel type not allowed on route",
+            "vessel_id": "V4",
+            "shipment_id": null,
+            "voyage_index": 23
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Nantong; requested 4",
+            "vessel_id": "V2",
+            "shipment_id": "C1",
+            "voyage_index": 0
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Hamburg; requested 3",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Shanghai; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C15",
+            "voyage_index": 10
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V4",
+            "shipment_id": "C13",
+            "voyage_index": 16
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 5",
+            "vessel_id": "V1",
+            "shipment_id": "C15",
+            "voyage_index": 11
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 3",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 5
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Rotterdam; requested 2",
+            "vessel_id": "V3",
+            "shipment_id": "C11",
+            "voyage_index": 5
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Hamburg; requested 2",
+            "vessel_id": "V3",
+            "shipment_id": "C11",
+            "voyage_index": 6
+          },
+          {
+            "constraint": "C7",
+            "message": "Only 0 units available at Jebel Ali; requested 4",
+            "vessel_id": "V1",
+            "shipment_id": "C16",
+            "voyage_index": 13
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C3",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C4",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C5",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C6",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C7",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C8",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C9",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 3/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C10",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/2 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C11",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/1 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C12",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C14",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/5 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C15",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/4 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C16",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/6 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C17",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C11",
+            "message": "Incomplete delivery: 0/3 units delivered",
+            "vessel_id": null,
+            "shipment_id": "C18",
+            "voyage_index": null
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 3
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 4
+          },
+          {
+            "constraint": "C8",
+            "message": "Cargo splitting prohibited: C10 requires 6 units, but voyage carries 3 units",
+            "vessel_id": "V3",
+            "shipment_id": "C10",
+            "voyage_index": 5
+          }
+        ],
+        "delivered": {
+          "C1": 4,
+          "C2": 3,
+          "C3": 0,
+          "C4": 0,
+          "C5": 0,
+          "C6": 0,
+          "C7": 0,
+          "C8": 0,
+          "C9": 0,
+          "C10": 3,
+          "C11": 0,
+          "C12": 0,
+          "C13": 4,
+          "C14": 0,
+          "C15": 0,
+          "C16": 0,
+          "C17": 0,
+          "C18": 0
+        }
+      }
+    }
+  ],
+  "planner_metadata": {
+    "model": "qwen3.6:35b",
+    "usage": {
+      "completion_tokens": 1995,
+      "prompt_tokens": 3451,
+      "total_tokens": 5446,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": null,
+        "text_tokens": null
+      },
+      "prompt_tokens_details": null
+    },
+    "finish_reason": "stop"
+  }
+}

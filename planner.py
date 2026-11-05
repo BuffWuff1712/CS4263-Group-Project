@@ -12,18 +12,33 @@ from schemas import Schedule
 ROOT = Path(__file__).resolve().parent
 
 
-def get_client() -> Any:
-    """Keep the user's tested OPENAI / SOCLAAS OpenAI-compatible connection."""
+def get_client(provider: str = "openai") -> Any:
+    """Connect to OpenAI, SOCLAAS, or OpenRouter with separate credentials."""
     load_dotenv(ROOT / ".env")
-    api_key = os.environ.get("OPENAI_API_KEY")
-    base_url = os.environ.get("OPENAI_BASE_URL")
+    if provider not in ("openai", "soclaas", "openrouter"):
+        raise ValueError(f"Unknown provider: {provider}")
+    prefix = provider.upper()
+    api_key = os.environ.get(f"{prefix}_API_KEY")
+    base_url = os.environ.get(f"{prefix}_BASE_URL")
     if not api_key or not base_url:
         raise RuntimeError(
-            "Set API_KEY and BASE_URL in the environment "
+            f"Set {prefix}_API_KEY and {prefix}_BASE_URL in the environment "
             "or in the project's .env file."
         )
-    from openai import OpenAI  # Installed by requirements.txt; only needed for real API calls.
+    from openai import OpenAI
     return OpenAI(api_key=api_key, base_url=base_url.rstrip("/"))
+
+
+def get_model(provider: str) -> str:
+    """Choose a model from the selected provider without mixing credentials."""
+    load_dotenv(ROOT / ".env")
+    if provider == "soclaas":
+        return os.getenv("SOCLAAS_MODEL", "qwen3.6:35b")
+    if provider == "openrouter":
+        return os.getenv("OPENROUTER_MODEL", "qwen/qwen3.8-max-prime")
+    if provider == "openai":
+        return os.getenv("OPENAI_MODEL", "gpt-5")
+    raise ValueError(f"Unknown provider: {provider}")
 
 
 def load_instance(path: str | Path) -> dict[str, Any]:
@@ -33,6 +48,25 @@ def load_instance(path: str | Path) -> dict[str, Any]:
 
 def load_prompt(path: str | Path = ROOT / "prompts" / "plan.txt") -> str:
     return Path(path).read_text(encoding="utf-8")
+
+
+# A line starting with "SCHEDULE:" (Markdown "#" or "**" around it is tolerated).
+_SCHEDULE_MARKER = re.compile(r"^[ \t#*]*SCHEDULE:[ \t*]*", re.MULTILINE)
+_OUTLINE_HEADER = re.compile(r"^\s*[#*]*\s*OUTLINE:[ \t*]*\n?")
+
+
+def split_outline(text: str) -> tuple[str | None, str]:
+    """Split an "OUTLINE: ... SCHEDULE: <json>" reply into (outline, json_text).
+
+    Uses the last line that starts with "SCHEDULE:". Without that line the
+    whole text is returned unchanged, so replies with no outline parse as before.
+    """
+    markers = list(_SCHEDULE_MARKER.finditer(text))
+    if not markers:
+        return None, text
+    last = markers[-1]
+    outline = _OUTLINE_HEADER.sub("", text[:last.start()], count=1).strip()
+    return outline or None, text[last.end():].strip()
 
 
 def parse_schedule(text: str) -> Schedule:
@@ -49,28 +83,41 @@ def generate_candidate(
     instance: dict[str, Any],
     *,
     model: str = "qwen3.5:9b",
-    reasoning: str ="",
+    reasoning: str | None = None,
     system_prompt: str | None = None,
+    outline: bool = False,
 ) -> dict[str, Any]:
-    """One-shot LLM call. No semantic constraint checking or automated schedule repair."""
+    """One-shot LLM call. No semantic constraint checking or automated schedule repair.
+
+    With outline=True the model writes a plan outline before the JSON; the
+    outline is returned under "outline" and only the JSON part is parsed.
+    """
     if system_prompt is None:
         system_prompt = load_prompt(ROOT / "prompts" / "plan.txt")
+    if outline:
+        system_prompt = system_prompt.rstrip() + "\n\n" + load_prompt(ROOT / "prompts" / "plan_outline.txt")
+    output_rule = (
+        "Write the OUTLINE, then SCHEDULE: and the JSON."
+        if outline else "Return only JSON."
+    )
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
+    request = {
+        "model": model,
+        "messages": [
             {"role": "system", "content": system_prompt},
             {
                 "role": "user",
                 "content": (
-                    "Find a complete feasible voyage schedule for this "
-                    "Return only JSON.\n\n"
+                    "Find a complete feasible voyage schedule for this instance. "
+                    + output_rule + "\n\n"
                     + json.dumps(instance, indent=2, ensure_ascii=False)
                 ),
             },
         ],
-        reasoning_effort=reasoning,
-    )
+    }
+    if reasoning:
+        request["reasoning_effort"] = reasoning
+    response = client.chat.completions.create(**request)
 
     message = response.choices[0].message
     raw = message.content or ""
@@ -81,12 +128,17 @@ def generate_candidate(
         "raw_response": raw,
         "schedule": None,
         "parse_error": None,
+        "outline": None,
         "finish_reason": response.choices[0].finish_reason,
         "usage": usage,
     }
 
+    json_text = raw
+    if outline:
+        result["outline"], json_text = split_outline(raw)
+        result["schedule_marker_found"] = bool(_SCHEDULE_MARKER.search(raw))
     try:
-        result["schedule"] = parse_schedule(raw).model_dump()
+        result["schedule"] = parse_schedule(json_text).model_dump()
     except (ValidationError, ValueError) as exc:
         result["parse_error"] = str(exc)
 
