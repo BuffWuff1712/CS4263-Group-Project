@@ -1,0 +1,265 @@
+{
+  "voyages": [
+    {
+      "vessel_id": "V2",
+      "origin": "Nantong",
+      "destination": "Shanghai",
+      "depart_hour": 0,
+      "cargo": [
+        {
+          "shipment_id": "C6",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Hamburg",
+      "destination": "Rotterdam",
+      "depart_hour": 0,
+      "cargo": [
+        {
+          "shipment_id": "C2",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Rotterdam",
+      "destination": "Felixstowe",
+      "depart_hour": 7,
+      "cargo": [
+        {
+          "shipment_id": "C2",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "vessel_id": "V1",
+      "origin": "Shanghai",
+      "destination": "Rotterdam",
+      "depart_hour": 10,
+      "cargo": [
+        {
+          "shipment_id": "C12",
+          "quantity": 1
+        },
+        {
+          "shipment_id": "C5",
+          "quantity": 2
+        },
+        {
+          "shipment_id": "C6",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "vessel_id": "V2",
+      "origin": "Shanghai",
+      "destination": "Taicang",
+      "depart_hour": 10,
+      "cargo": []
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Felixstowe",
+      "destination": "Hamburg",
+      "depart_hour": 11,
+      "cargo": [
+        {
+          "shipment_id": "C10",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "vessel_id": "V2",
+      "origin": "Taicang",
+      "destination": "Nantong",
+      "depart_hour": 18,
+      "cargo": [
+        {
+          "shipment_id": "C1",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "vessel_id": "V2",
+      "origin": "Nantong",
+      "destination": "Shanghai",
+      "depart_hour": 23,
+      "cargo": [
+        {
+          "shipment_id": "C3",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Hamburg",
+      "destination": "Rotterdam",
+      "depart_hour": 23,
+      "cargo": [
+        {
+          "shipment_id": "C7",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Rotterdam",
+      "destination": "Hamburg",
+      "depart_hour": 30,
+      "cargo": []
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Hamburg",
+      "destination": "Rotterdam",
+      "depart_hour": 37,
+      "cargo": [
+        {
+          "shipment_id": "C10",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Rotterdam",
+      "destination": "Hamburg",
+      "depart_hour": 60,
+      "cargo": [
+        {
+          "shipment_id": "C12",
+          "quantity": 1
+        },
+        {
+          "shipment_id": "C5",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Hamburg",
+      "destination": "Felixstowe",
+      "depart_hour": 67,
+      "cargo": [
+        {
+          "shipment_id": "C5",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Felixstowe",
+      "destination": "Rotterdam",
+      "depart_hour": 79,
+      "cargo": [
+        {
+          "shipment_id": "C11",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "vessel_id": "V1",
+      "origin": "Rotterdam",
+      "destination": "Shanghai",
+      "depart_hour": 83,
+      "cargo": [
+        {
+          "shipment_id": "C11",
+          "quantity": 2
+        },
+        {
+          "shipment_id": "C4",
+          "quantity": 6
+        },
+        {
+          "shipment_id": "C7",
+          "quantity": 6
+        },
+        {
+          "shipment_id": "C8",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "vessel_id": "V2",
+      "origin": "Shanghai",
+      "destination": "Nantong",
+      "depart_hour": 133,
+      "cargo": [
+        {
+          "shipment_id": "C11",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "vessel_id": "V2",
+      "origin": "Nantong",
+      "destination": "Shanghai",
+      "depart_hour": 183,
+      "cargo": []
+    },
+    {
+      "vessel_id": "V2",
+      "origin": "Shanghai",
+      "destination": "Taicang",
+      "depart_hour": 193,
+      "cargo": [
+        {
+          "shipment_id": "C8",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "vessel_id": "V2",
+      "origin": "Taicang",
+      "destination": "Shanghai",
+      "depart_hour": 201,
+      "cargo": [
+        {
+          "shipment_id": "C9",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "vessel_id": "V1",
+      "origin": "Shanghai",
+      "destination": "Rotterdam",
+      "depart_hour": 233,
+      "cargo": [
+        {
+          "shipment_id": "C9",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "vessel_id": "V3",
+      "origin": "Rotterdam",
+      "destination": "Hamburg",
+      "depart_hour": 283,
+      "cargo": [
+        {
+          "shipment_id": "C9",
+          "quantity": 5
+        }
+      ]
+    }
+  ]
+}

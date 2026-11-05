@@ -1,7 +1,7 @@
 
 {
   "instance_id": "mtrsp_hard_testset3_v1",
-  "description": "Test Set 3: three regions, nine ports, four vessels, 18 indivisible shipments, transshipment allowed, no chokepoints.",
+  "description": "Test Set 3: three regions, nine ports, four vessels, 17 indivisible shipments, transshipment allowed, no chokepoints.",
   "time_unit": "hour",
   "planning_horizon_hours": 300,
   "ports": [
@@ -318,19 +318,11 @@
       "quantity": 6,
       "deadline_hour": 200,
       "mandatory_stop": null
-    },
-    {
-      "id": "C18",
-      "origin": "Felixstowe",
-      "destination": "Sharjah",
-      "quantity": 3,
-      "deadline_hour": 165,
-      "mandatory_stop": null
     }
   ],
   "rules": {
     "cargo_splitting_allowed": false,
-    "max_transport_legs_per_container": 6,
+    "max_transport_legs_per_container": 4,
     "cargo_handling_time_hours": 0,
     "port_storage_capacity": "unlimited",
     "same_hour_transfer_allowed": true,

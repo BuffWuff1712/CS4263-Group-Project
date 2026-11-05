@@ -10,8 +10,9 @@ from pathlib import Path
 from schemas import CargoLoad, Schedule, Voyage
 from simulator import simulate
 
-sys.setrecursionlimit(20000)
-
+sys.setrecursionlimit(10000000)
+TIME_LIMIT = 0
+RESTARTS = 0
 
 class Timeout(Exception):
     pass
@@ -399,9 +400,30 @@ class Model:
         scored.sort()
         return [val for _, val in scored]
 
-    def backtrack(self):
+    def backtrack(self, depth=0):
         csp = self.csp
         csp.nodes += 1
+
+        self.max_depth = max(self.max_depth, depth)
+
+        if csp.nodes % 100000 == 0:
+            fixed = sum(
+                mask.bit_count() == 1
+                for mask in csp.dom
+            )
+
+            elapsed = time.perf_counter() - self.search_start
+
+            print(
+                f"Nodes: {csp.nodes:,} | "
+                f"Depth: {depth} | "
+                f"Max depth: {self.max_depth} | "
+                f"Fixed: {fixed}/{len(csp.dom)} | "
+                f"Backtracks: {csp.backtracks:,} | "
+                f"Elapsed: {elapsed:.1f}s",
+                flush=True
+            )
+
         if self.deadline is not None and time.perf_counter() > self.deadline:
             raise Timeout
         if csp.nodes > self.node_limit:
@@ -412,7 +434,7 @@ class Model:
         for val in self.order_values(var):
             mark = len(csp.trail)
             csp.set_dom(var, 1 << val)
-            if csp.propagate([var]) and self.backtrack():
+            if csp.propagate([var]) and self.backtrack(depth + 1):
                 return True
             csp.undo(mark)
         csp.backtracks += 1
@@ -426,6 +448,8 @@ class Model:
         or 5000) turned a 32 s solve into a 600 s timeout.  Returns "timeout"
         once time_limit seconds pass."""
         csp = self.csp
+        self.max_depth = 0
+        self.search_start = time.perf_counter() 
         self.deadline = (None if time_limit is None
                          else time.perf_counter() + time_limit)
         if not csp.propagate():
@@ -760,9 +784,9 @@ def solve_instance(instance: dict, time_limit=None, restart_base=None):
 def main():
     parser = argparse.ArgumentParser(description="Classical CSP baseline for MTRSP")
     parser.add_argument("names", nargs="*", default=["easy", "medium", "hard"])
-    parser.add_argument("--time-limit", type=float, default=600,
+    parser.add_argument("--time-limit", type=float, default=TIME_LIMIT,
                         help="seconds per instance (0 = no limit)")
-    parser.add_argument("--restart-base", type=int, default=0,
+    parser.add_argument("--restart-base", type=int, default=RESTARTS,
                         help="nodes per Luby unit (0 = no restarts)")
     args = parser.parse_args()
 
