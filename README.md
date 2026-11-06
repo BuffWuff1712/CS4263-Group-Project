@@ -2,7 +2,7 @@
 
 This project compares two ways of solving the **Maritime Transshipment Routing and Scheduling Problem (MTRSP)**:
 
-- **Classical:** a constraint satisfaction (CSP) solver with backtracking search (`csp.py`).
+- **Classical:** a constraint satisfaction (CSP) solver with backtracking search (`csp_itinerary.py`).
 - **LLM-based:** a **Plan–Simulate–Repair pipeline** in which an LLM writes and revises schedules (`pipeline.py`).
 
 Both approaches are checked by the same deterministic simulator (`simulator.py`). The goal is a feasible vessel schedule that delivers every shipment before its deadline while satisfying routing, vessel capacity, cargo movement, and scheduling constraints.
@@ -17,7 +17,7 @@ Both approaches are checked by the same deterministic simulator (`simulator.py`)
 | `repair.py` | Sends the instance, previous schedule, and violations back to the LLM for a revised schedule. Retries on rate limits. |
 | `feedback.py` | Turns simulator violations into grouped, prioritised feedback with verified facts (used with `--safeguard`). |
 | `safeguards.py` | `SafeguardConfig`: the on/off switches for every safeguard, recorded in each results file. |
-| `csp.py` | Classical CSP baseline: constraint propagation and backtracking search, with optional restarts and a time limit. |
+| `csp_itinerary.py` | Classical CSP solver: constraint propagation and backtracking search, with cargo-path preprocessing, grouped itinerary branching, optional restarts and a time limit. |
 | `schemas.py` | Pydantic data models for voyages, cargo loads, schedules, violations, and validation reports. |
 | `run_planner.py` | Runs only the planning step and saves the candidate schedule, without checking feasibility. |
 | `run_qwen_quick.py` | One-shot baseline across several Qwen models and instances. The simulator scores each output, but no feedback is sent back. |
@@ -25,7 +25,7 @@ Both approaches are checked by the same deterministic simulator (`simulator.py`)
 | `prompts/repair.txt` | The LLM's repair instructions. |
 | `prompts/plan_outline.txt`, `prompts/repair_outline.txt` | Added to the planning and repair prompts with `--outline`: write a plan outline, then the JSON. |
 | `prompts/repair_trace.txt` | Added to the repair prompt with `--trace`: how to read the simulation trace. |
-| `data/*.json` | Problem instances (`easy`, `medium`, `hard`) with ports, routes, vessels, shipments, and constraints. |
+| `data/*.json` | Problem instances (`easy`, `medium`, `hard`, `extra_hard`) with ports, routes, vessels, shipments, and constraints. |
 | `tests/` | Pytest tests for the planner, simulator trace, and safeguard wiring (no API calls). |
 
 ## Pipeline Workflow
@@ -204,11 +204,12 @@ python pipeline.py --provider soclaas --initial-schedule results/base.json --tra
 ## Running the Classical CSP Baseline
 
 ```bash
-python csp.py                          # easy, medium and hard
-python csp.py easy medium --time-limit 600 --restart-base 0
+python csp_itinerary.py                          # easy, medium and hard
+python csp_itinerary.py hard --time-limit 600
+python csp_itinerary.py hard --baseline          # plain CSP branching, for comparison
 ```
 
-`--time-limit` is in seconds per instance (0 means no limit). `--restart-base` sets the number of nodes per Luby restart unit (0 means no restarts). Schedules and metrics are saved to `results/classical_csp/`.
+`--time-limit` is in seconds per instance (0 means no limit, the default). `--restart-base` sets the number of nodes per Luby restart unit (0 means no restarts). Run `python csp_itinerary.py --help` for the switches that turn each optimisation on or off. Instances with chokepoints, mandatory stops, non-zero handling time, transfer delays or limited port storage are reported as `unsupported`. Schedules and metrics are saved to `results/classical_csp_itinerary/`.
 
 ## Other Scripts
 

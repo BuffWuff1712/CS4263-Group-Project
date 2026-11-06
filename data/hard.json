@@ -299,7 +299,7 @@
       "id": "C15",
       "origin": "Nantong",
       "destination": "Sharjah",
-      "quantity": 5,
+      "quantity": 3,
       "deadline_hour": 110,
       "mandatory_stop": null
     },
