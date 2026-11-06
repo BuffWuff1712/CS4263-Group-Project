@@ -110,7 +110,7 @@ def generate_candidate(
                 "content": (
                     "Find a complete feasible voyage schedule for this instance. "
                     + output_rule + "\n\n"
-                    + json.dumps(instance, indent=2, ensure_ascii=False)
+                    + json.dumps(instance, separators=(",", ":"), ensure_ascii=False)
                 ),
             },
         ],

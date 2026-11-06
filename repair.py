@@ -87,7 +87,8 @@ def call_with_retry(client, **kwargs):
             ).chat.completions.create(**kwargs)
 
         except RateLimitError as e:
-            if attempt == max_attempts - 1:
+            # A request larger than the per-minute limit can never succeed; waiting won't help.
+            if attempt == max_attempts - 1 or "request too large" in str(e).lower():
                 raise
 
             headers = e.response.headers
@@ -194,7 +195,7 @@ def repair(
                 "role": "user",
                 "content": json.dumps(
                     repair_input,
-                    indent=2,
+                    separators=(",", ":"),
                     ensure_ascii=False
                 )
             }
@@ -238,7 +239,7 @@ def repair(
                 "Return only one complete JSON object with exactly the key voyages. "
                 "No explanation, Markdown, or additional schedules."
             )},
-            {"role": "user", "content": json.dumps(retry_input, indent=2, ensure_ascii=False)},
+            {"role": "user", "content": json.dumps(retry_input, separators=(",", ":"), ensure_ascii=False)},
         ]
         retry_response = call_with_retry(client=client, **retry_request)
         content = retry_response.choices[0].message.content or ""
