@@ -1,7 +1,7 @@
 {
   "status": "feasible",
-  "solve_time_s": 0.014,
-  "time_limit_s": null,
+  "solve_time_s": 0.009,
+  "time_limit_s": 120.0,
   "nodes_expanded": 18,
   "backtracks": 0,
   "restarts": 0,

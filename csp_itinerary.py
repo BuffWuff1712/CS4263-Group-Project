@@ -174,6 +174,13 @@ class Model:
             raise NotImplementedError("chokepoints are not modelled")
         if any(s.get("mandatory_stop") for s in instance["shipments"]):
             raise NotImplementedError("mandatory stops are not modelled")
+        # earliest-start departure times are only exact under these rules
+        if rules.get("cargo_handling_time_hours", 0) != 0:
+            raise NotImplementedError("non-zero cargo handling time is not modelled")
+        if not rules.get("same_hour_transfer_allowed", True):
+            raise NotImplementedError("transfer delays are not modelled")
+        if rules.get("port_storage_capacity", "unlimited") != "unlimited":
+            raise NotImplementedError("limited port storage is not modelled")
 
         self.ports = [p["name"] for p in instance["ports"]]
         self.pid = {p: i for i, p in enumerate(self.ports)}
