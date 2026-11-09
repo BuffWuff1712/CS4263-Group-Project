@@ -210,7 +210,11 @@ def repair(
     # ======================================
 
     content = response.choices[0].message.content or ""
-    metadata = {"format_retries": 0, "finish_reason": response.choices[0].finish_reason}
+    metadata = {
+        "format_retries": 0,
+        "finish_reason": response.choices[0].finish_reason,
+        "usage": response.usage.model_dump() if response.usage else None,
+    }
     if outline:
         metadata["outline"], schedule_text = split_outline(content)
         metadata["schedule_marker_found"] = bool(_SCHEDULE_MARKER.search(content))
@@ -244,7 +248,8 @@ def repair(
         retry_response = call_with_retry(client=client, **retry_request)
         content = retry_response.choices[0].message.content or ""
         metadata.update(format_retries=1, first_failed_response=str(first_path),
-                        finish_reason=retry_response.choices[0].finish_reason)
+                        finish_reason=retry_response.choices[0].finish_reason,
+                        retry_usage=retry_response.usage.model_dump() if retry_response.usage else None)
         if outline:
             # The retry asks for JSON only, so the first reply's outline no longer applies.
             metadata["outline"] = None

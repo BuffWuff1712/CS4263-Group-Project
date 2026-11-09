@@ -54,6 +54,156 @@ def test_safeguard_flag_only_sets_existing_safeguards():
     assert config.outline == "off" and not config.trace
 
 
+@pytest.mark.parametrize("group, expected", [
+    ("planning_support", {"outline": "rolling"}),
+    ("guided_repair", {"grounded_feedback": True, "trace": True}),
+    ("repair_guards", {"output_recovery": True, "delivery_preservation": True}),
+    ("all_safeguards", {
+        "outline": "rolling", "grounded_feedback": True, "trace": True,
+        "output_recovery": True, "delivery_preservation": True,
+    }),
+])
+def test_group_flags_enable_exact_components(group, expected):
+    baseline = SafeguardConfig().to_dict()
+    assert SafeguardConfig.from_flags(**{group: True}).to_dict() == (baseline | expected)
+
+
+def test_explicit_outline_mode_is_preserved_with_planning_support():
+    assert SafeguardConfig.from_flags(planning_support=True, outline="fresh").outline == "fresh"
+
+
+@pytest.mark.parametrize("flag", [
+    "grounded_feedback", "output_recovery", "delivery_preservation",
+])
+def test_original_mitigations_can_be_enabled_individually(flag):
+    config = SafeguardConfig.from_flags(**{flag: True})
+    assert {name for name in (
+        "grounded_feedback", "output_recovery", "delivery_preservation"
+    ) if getattr(config, name)} == {flag}
+
+
+def test_pipeline_records_individual_mitigation_flags():
+    result = pipeline.run_pipeline(
+        EASY, provider="openai", model="m", max_repairs=0,
+        initial_schedule=ROOT / "tests" / "fixtures" / "easy_valid_schedule.json",
+        grounded_feedback=True,
+    )
+    assert result["planner_metadata"]["safeguards"] == {
+        "grounded_feedback": True,
+        "output_recovery": False,
+        "delivery_preservation": False,
+        "outline": "off",
+        "trace": False,
+    }
+
+
+def test_pipeline_records_group_components():
+    result = pipeline.run_pipeline(
+        EASY, provider="openai", model="m", max_repairs=0,
+        initial_schedule=ROOT / "tests" / "fixtures" / "easy_valid_schedule.json",
+        guided_repair=True,
+    )
+    assert result["planner_metadata"]["safeguards"] == {
+        "grounded_feedback": True,
+        "output_recovery": False,
+        "delivery_preservation": False,
+        "outline": "off",
+        "trace": True,
+    }
+
+
+def test_tiered_safeguards_stop_after_valid_guided_repair(tmp_path, monkeypatch):
+    initial = tmp_path / "empty.json"
+    initial.write_text(json.dumps({"voyages": []}))
+    fake = FakeClient([json.dumps(VALID)])
+    monkeypatch.setattr(repair, "get_client", lambda provider: fake)
+
+    result = pipeline.run_pipeline(
+        EASY, provider="openai", model="m", initial_schedule=initial,
+        tiered_safeguards=True, max_repairs=2,
+    )
+
+    assert result["success"]
+    assert len(fake.requests) == 1
+    assert result["attempts"][0]["repair_safeguard_stage"] == "guided_repair"
+    assert result["attempts"][0]["delivery_preservation"]["accepted"]
+    assert "SIMULATION TRACE" in fake.requests[0]["messages"][0]["content"]
+    assert "OUTPUT FORMAT OVERRIDE" not in fake.requests[0]["messages"][0]["content"]
+
+
+def test_tiered_safeguards_request_outline_for_initial_plan(monkeypatch):
+    fake = FakeClient([reply("shipment routes", VALID)])
+    monkeypatch.setattr(pipeline.planner, "get_client", lambda provider: fake)
+
+    result = pipeline.run_pipeline(
+        EASY, provider="openai", model="m", tiered_safeguards=True,
+        max_repairs=0,
+    )
+
+    assert result["success"]
+    assert result["planner_metadata"]["tiered_safeguards"]
+    assert result["planner_metadata"]["outline"] == "shipment routes"
+    assert result["planner_metadata"]["safeguards"]["outline"] == "rolling"
+
+
+def test_tiered_safeguards_add_outline_only_after_failed_guided_repair(tmp_path, monkeypatch):
+    initial = tmp_path / "empty.json"
+    initial.write_text(json.dumps({"voyages": []}))
+    fake = FakeClient([json.dumps({"voyages": []}), reply("updated routes", VALID)])
+    monkeypatch.setattr(repair, "get_client", lambda provider: fake)
+
+    result = pipeline.run_pipeline(
+        EASY, provider="openai", model="m", initial_schedule=initial,
+        tiered_safeguards=True, max_repairs=2,
+    )
+
+    assert result["success"]
+    assert len(fake.requests) == 2
+    assert [a.get("repair_safeguard_stage") for a in result["attempts"]] == [
+        "guided_repair", "outline_escalation", None,
+    ]
+    assert "OUTPUT FORMAT OVERRIDE" not in fake.requests[0]["messages"][0]["content"]
+    assert "OUTPUT FORMAT OVERRIDE" in fake.requests[1]["messages"][0]["content"]
+
+
+def test_tiered_safeguards_escalate_after_unrecoverable_reply(tmp_path, monkeypatch):
+    initial = tmp_path / "empty.json"
+    initial.write_text(json.dumps({"voyages": []}))
+    fake = FakeClient(["not JSON", "still not JSON", reply("updated routes", VALID)])
+    monkeypatch.setattr(repair, "get_client", lambda provider: fake)
+    monkeypatch.setattr(repair, "_save_failed_response", lambda content: "unused")
+
+    result = pipeline.run_pipeline(
+        EASY, provider="openai", model="m", initial_schedule=initial,
+        tiered_safeguards=True, max_repairs=2,
+    )
+
+    assert result["success"]
+    assert len(fake.requests) == 3
+    assert "repair_error" in result["attempts"][0]
+    assert result["attempts"][1]["repair_safeguard_stage"] == "outline_escalation"
+
+
+def test_saved_malformed_initial_reply_can_be_recovered_without_regeneration(tmp_path):
+    saved = tmp_path / "malformed.json"
+    saved.write_text(json.dumps({
+        "status": "plan_parse_failed",
+        "schedule": None,
+        "attempts": [{"raw_response": "Here is the plan:\n" + json.dumps(VALID),
+                      "parse_error": "Invalid JSON"}],
+    }))
+
+    baseline = pipeline.run_pipeline(EASY, provider="openai", model="m", max_repairs=0,
+                                     initial_schedule=saved)
+    recovered = pipeline.run_pipeline(EASY, provider="openai", model="m", max_repairs=0,
+                                      initial_schedule=saved, output_recovery=True)
+
+    assert baseline["status"] == "plan_parse_failed"
+    assert recovered["success"]
+    assert recovered["planner_metadata"]["initial_recovery"]["method"] == "embedded_json"
+    assert recovered["attempts"][0]["schedule"] == VALID
+
+
 def test_repair_sends_outline_and_trace_and_returns_new_outline(monkeypatch):
     instance = load_instance(EASY)
     previous = Schedule.model_validate({"voyages": []})

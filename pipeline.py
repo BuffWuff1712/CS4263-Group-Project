@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import time
 from pathlib import Path
 from dotenv import load_dotenv
 from openai import APIError
@@ -10,7 +11,7 @@ import planner
 import simulator
 import repair
 from feedback import format_feedback
-from safeguards import OUTLINE_MODES, SafeguardConfig
+from safeguards import SafeguardConfig
 
 from schemas import Schedule, ValidationReport
 
@@ -40,18 +41,43 @@ def delivery_regressions(instance, before: ValidationReport, after: ValidationRe
 def run_pipeline(
     instance_path, max_repairs=MAX_REPAIRS, *,
     provider="openai", model=None, reasoning=None,
-    safeguard=False, initial_schedule=None,
+    safeguard=False, grounded_feedback=False, output_recovery=False,
+    delivery_preservation=False, planning_support=False,
+    guided_repair=False, repair_guards=False, all_safeguards=False,
+    tiered_safeguards=False,
+    initial_schedule=None,
     resume_final=False, request_timeout=None,
     outline="off", trace=False, config=None,
 ):
     """Run plan -> simulate -> repair.
 
-    Safeguards come from `config` if given; otherwise from the flags:
-    safeguard (grounded feedback, output recovery, delivery preservation),
-    outline ("off", "fresh" or "rolling") and trace.
+    Safeguards come from `config` if given; otherwise from the flags.
+    Tiered mode starts with a guided repair and only adds the outline to
+    later repairs if the simulator has not yet accepted a schedule.
     """
-    if config is None:
-        config = SafeguardConfig.from_flags(safeguard=safeguard, outline=outline, trace=trace)
+    if tiered_safeguards:
+        if config is not None or any((
+            safeguard, grounded_feedback, output_recovery,
+            delivery_preservation, planning_support, guided_repair,
+            repair_guards, all_safeguards, outline != "off", trace,
+        )):
+            raise ValueError("tiered_safeguards cannot be combined with other safeguard controls")
+        config = SafeguardConfig(
+            grounded_feedback=True,
+            output_recovery=True,
+            delivery_preservation=True,
+            outline="rolling",
+            trace=True,
+        )
+    elif config is None:
+        config = SafeguardConfig.from_flags(
+            safeguard=safeguard, grounded_feedback=grounded_feedback,
+            output_recovery=output_recovery,
+            delivery_preservation=delivery_preservation,
+            planning_support=planning_support, guided_repair=guided_repair,
+            repair_guards=repair_guards, all_safeguards=all_safeguards,
+            outline=outline, trace=trace,
+        )
 
     # ======================================
     # 1. LOAD PROBLEM INSTANCE
@@ -87,25 +113,52 @@ def run_pipeline(
         )
     else:
         saved = json.loads(Path(initial_schedule).read_text(encoding="utf-8"))
+        saved_outline = None
+        saved_raw = None
         if "voyages" in saved:
             saved_schedule = saved
+        elif saved.get("status") == "plan_parse_failed" and saved.get("attempts"):
+            saved_schedule = None
+            saved_raw = saved["attempts"][0].get("raw_response")
         elif resume_final and saved.get("schedule"):
             saved_schedule = saved["schedule"]
+            saved_outline = next(
+                (attempt.get("outline") for attempt in reversed(saved.get("attempts", []))
+                 if attempt.get("schedule") == saved_schedule and attempt.get("outline")),
+                None,
+            )
         elif saved.get("attempts") and saved["attempts"][0].get("schedule"):
             saved_schedule = saved["attempts"][0]["schedule"]
+            saved_outline = saved["attempts"][0].get("outline") or saved.get("planner_metadata", {}).get("outline")
         else:
             saved_schedule = saved.get("schedule")
         candidate = {
-            "schedule": Schedule.model_validate(saved_schedule).model_dump(),
+            "schedule": Schedule.model_validate(saved_schedule).model_dump() if saved_schedule is not None else None,
             "model": model,
             "usage": None,
             "finish_reason": "reused_initial_schedule",
-            "outline": None,
+            "outline": saved_outline,
+            "raw_response": saved_raw,
+            "parse_error": saved.get("attempts", [{}])[0].get("parse_error") if saved_raw else None,
         }
+
+    # Apply the same bounded JSON recovery to an initial reply when requested.
+    # This also permits replaying a saved malformed reply without another API call.
+    if candidate["schedule"] is None and config.output_recovery and candidate.get("raw_response"):
+        try:
+            recovered, recovery_metadata = repair.parse_repair_response(
+                candidate["raw_response"], instance, recover=True,
+            )
+            candidate["schedule"] = recovered.model_dump()
+            candidate["initial_recovery"] = recovery_metadata
+        except ValueError:
+            pass
 
     def planner_metadata():
         return {
             "model": candidate["model"],
+            "provider": provider,
+            "reasoning_effort": reasoning,
             "usage": candidate["usage"],
             "finish_reason": candidate["finish_reason"],
             "initial_schedule": str(initial_schedule) if initial_schedule else None,
@@ -114,6 +167,8 @@ def run_pipeline(
             "outline": candidate.get("outline"),
             "resume_final": resume_final,
             "request_timeout": request_timeout,
+            "initial_recovery": candidate.get("initial_recovery"),
+            "tiered_safeguards": tiered_safeguards,
         }
 
     # Check if planner returned a parseable schedule
@@ -187,6 +242,15 @@ def run_pipeline(
         )
         history[-1]["repair_feedback"] = feedback
 
+        # The first tier uses the guided-repair prompt unchanged. Recovery
+        # and delivery checks act after the reply; an outline is added only
+        # if another repair is needed.
+        repair_outline = config.uses_outline and not (tiered_safeguards and attempt == 0)
+        if tiered_safeguards:
+            history[-1]["repair_safeguard_stage"] = (
+                "guided_repair" if attempt == 0 else "outline_escalation"
+            )
+
         # ==================================
         # 4. REPAIR
         # ==================================
@@ -204,8 +268,8 @@ def run_pipeline(
                 format_recovery=config.output_recovery,
                 include_metadata=True,
                 request_timeout=request_timeout,
-                outline=config.uses_outline,
-                previous_outline=current_outline if config.outline == "rolling" else None,
+                outline=repair_outline,
+                previous_outline=current_outline if repair_outline and config.outline == "rolling" else None,
                 trace=report.trace if config.trace else None,
             )
             history[-1]["repair_metadata"] = repair_metadata
@@ -239,11 +303,16 @@ def run_pipeline(
             regression_warning = None
             schedule = revised_schedule
             if config.uses_outline:
-                current_outline = repair_metadata.get("outline")
+                current_outline = repair_metadata.get("outline") if repair_outline else None
 
         except (ValueError, TypeError, APIError) as exc:
 
             print(f"Repair failed: {exc}")
+
+            if tiered_safeguards and isinstance(exc, ValueError) and attempt + 1 < max_repairs:
+                history[-1]["repair_error"] = str(exc)
+                print("Escalating to an outline-assisted repair.")
+                continue
 
             history.append({
                 "attempt": attempt + 1,
@@ -288,12 +357,13 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, default=BASE_DIR / "results" / "pipeline_result.json")
     parser.add_argument("--max-repairs", type=int, default=MAX_REPAIRS)
     parser.add_argument("--reasoning-effort", help="Use only with a model that supports this setting")
-    parser.add_argument("--safeguard", action="store_true", help="Use grounded feedback, output recovery, and delivery preservation")
-    parser.add_argument("--outline", choices=OUTLINE_MODES, default="off",
-                        help="Ask for a plan outline before the JSON. fresh: every call writes its own; "
-                             "rolling: each repair also receives the current outline")
-    parser.add_argument("--trace", action="store_true",
-                        help="Send the simulator's vessel and shipment timelines to the repair model")
+    groups = parser.add_argument_group("safeguard groups")
+    groups.add_argument("--planning-support", action="store_true", help="Use a rolling plan outline")
+    groups.add_argument("--guided-repair", action="store_true", help="Use grounded feedback and the simulation trace")
+    groups.add_argument("--repair-guards", action="store_true", help="Use output recovery and delivery preservation")
+    groups.add_argument("--all-safeguards", action="store_true", help="Enable all three safeguard groups together")
+    groups.add_argument("--tiered-safeguards", action="store_true",
+                        help="Try guided repair first; add an outline only if another repair is needed")
     parser.add_argument("--initial-schedule", type=Path, help="Reuse a saved pipeline result or schedule for a controlled comparison")
     parser.add_argument("--resume-final", action="store_true", help="Use the final accepted schedule from --initial-schedule")
     parser.add_argument("--request-timeout", type=float, help="Seconds to wait for each model response")
@@ -304,15 +374,25 @@ if __name__ == "__main__":
         parser.error("--resume-final requires --initial-schedule")
     if args.request_timeout is not None and args.request_timeout <= 0:
         parser.error("--request-timeout must be positive")
-
+    if args.tiered_safeguards and any((
+        args.planning_support, args.guided_repair,
+        args.repair_guards, args.all_safeguards,
+    )):
+        parser.error("--tiered-safeguards cannot be combined with other safeguard groups")
+    started_at = time.perf_counter()
     result = run_pipeline(
         args.instance, max_repairs=args.max_repairs,
         provider=args.provider, model=args.model, reasoning=args.reasoning_effort,
-        safeguard=args.safeguard, initial_schedule=args.initial_schedule,
+        planning_support=args.planning_support,
+        guided_repair=args.guided_repair,
+        repair_guards=args.repair_guards,
+        all_safeguards=args.all_safeguards,
+        tiered_safeguards=args.tiered_safeguards,
+        initial_schedule=args.initial_schedule,
         resume_final=args.resume_final,
         request_timeout=args.request_timeout,
-        outline=args.outline, trace=args.trace,
     )
+    result["runtime_seconds"] = round(time.perf_counter() - started_at, 3)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as f:

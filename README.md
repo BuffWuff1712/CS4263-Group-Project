@@ -13,18 +13,18 @@ Both approaches are checked by the same deterministic simulator (`simulator.py`)
 |---|---|
 | `pipeline.py` | Runs the Plan–Simulate–Repair loop and saves the full attempt history. Main entry point for the LLM approach. |
 | `planner.py` | Connects to the selected provider (OpenAI, SOCLAAS, or OpenRouter) and asks the LLM for an initial voyage schedule. |
-| `simulator.py` | Deterministically validates a schedule against constraints C1–C13 and reports violations and delivered quantities. Can also produce a vessel and shipment trace (`--trace`). |
+| `simulator.py` | Deterministically validates a schedule against constraints C1–C13 and reports violations, delivered quantities, and a movement trace. |
 | `repair.py` | Sends the instance, previous schedule, and violations back to the LLM for a revised schedule. Retries on rate limits. |
-| `feedback.py` | Turns simulator violations into grouped, prioritised feedback with verified facts (used with `--safeguard`). |
-| `safeguards.py` | `SafeguardConfig`: the on/off switches for every safeguard, recorded in each results file. |
+| `feedback.py` | Turns simulator violations into grouped, prioritised feedback with verified facts for guided repair. |
+| `safeguards.py` | Holds the safeguard configuration recorded in each results file. |
 | `csp_itinerary.py` | Classical CSP solver: constraint propagation and backtracking search, with cargo-path preprocessing, grouped itinerary branching, optional restarts and a time limit. |
 | `schemas.py` | Pydantic data models for voyages, cargo loads, schedules, violations, and validation reports. |
 | `run_planner.py` | Runs only the planning step and saves the candidate schedule, without checking feasibility. |
 | `run_qwen_quick.py` | One-shot baseline across several Qwen models and instances. The simulator scores each output, but no feedback is sent back. |
 | `prompts/plan.txt` | The LLM's initial planning instructions. |
 | `prompts/repair.txt` | The LLM's repair instructions. |
-| `prompts/plan_outline.txt`, `prompts/repair_outline.txt` | Added to the planning and repair prompts with `--outline`: write a plan outline, then the JSON. |
-| `prompts/repair_trace.txt` | Added to the repair prompt with `--trace`: how to read the simulation trace. |
+| `prompts/plan_outline.txt`, `prompts/repair_outline.txt` | Instructions for writing a plan outline with the schedule. |
+| `prompts/repair_trace.txt` | Instructions for using the simulation trace during repair. |
 | `data/*.json` | Problem instances (`easy`, `medium`, `hard`, `extra_hard`) with ports, routes, vessels, shipments, and constraints. |
 | `tests/` | Pytest tests for the planner, simulator trace, and safeguard wiring (no API calls). |
 
@@ -91,41 +91,24 @@ The pipeline stops when:
 
 Results and attempt histories are saved to the path given by `--output` (default `results/pipeline_result.json`).
 
-## Safeguard Mode (`--safeguard`)
+## Safeguards
 
-Off by default. With `--safeguard`, `pipeline.py` adds three safeguards to the repair loop. The simulator still decides whether a schedule is valid.
+The three group flags can be tested separately or enabled together:
 
-1. **Grounded feedback** (`feedback.py`): violations are grouped by constraint and ordered so structural and cargo-movement errors come before delivery errors. Each violation includes facts computed from the instance and schedule, such as excess units over capacity or hours past a deadline. Repeated unit-level delivery messages are shortened, but every shipment shortfall is listed.
-2. **Output recovery** (`repair.py`): if the repair reply is not clean schedule JSON, complete schedules embedded in the text are extracted, simulated, and the one with the fewest violations is used. If none is found, the model gets one retry with a stricter format prompt.
-3. **Delivery preservation** (`pipeline.py`): a repaired schedule that is still invalid and delivers fewer units of any shipment than before is rejected. The previous schedule is kept, and the next repair prompt lists the lost shipments. A rejected repair still counts as an attempt.
+| Flag | What it does |
+|---|---|
+| `--planning-support` | Asks for a shipment-route and vessel outline before the schedule and carries it into repair. |
+| `--guided-repair` | Gives repairs prioritised simulator violations, computed timing and capacity facts, and a movement trace. |
+| `--repair-guards` | Recovers a complete schedule from malformed output when possible and rejects repairs that lose delivered units. |
+| `--all-safeguards` | Enables the three groups together. |
 
-## Plan Outline (`--outline {off,fresh,rolling}`)
-
-Off by default, and independent of `--safeguard`. The model writes a short plan outline before the JSON schedule: the route and vessel for each shipment's legs, and the order of ports for each vessel. The reply has this shape:
-
-```text
-OUTLINE:
-C4 x4: Taicang -(V2)-> Shanghai -(V1)-> Rotterdam, deadline 140
-V1: Shanghai -> Rotterdam -> Shanghai
-SCHEDULE:
-{"voyages": [...]}
-```
-
-`planner.split_outline()` splits the reply at the last line starting with `SCHEDULE:` and only the JSON after it is parsed, so the existing parsers are unchanged. A reply without the marker is parsed as a whole, as before.
-
-- `fresh`: the planner and every repair call write their own outline.
-- `rolling`: as `fresh`, and each repair also receives the outline of the schedule it is revising (`previous_outline`). Repairs return a complete updated outline, marking changed lines with `CHANGED:`. The outline only moves forward when a repair is accepted; if delivery preservation rejects a repair, the previous outline is kept with the previous schedule.
-
-Each attempt in the results file records its `outline`, and `planner_metadata.outline` holds the planner's. With `--initial-schedule` there is no planner outline, so the first `rolling` repair starts without one.
-
-## Simulation Trace (`--trace`)
-
-Off by default, and independent of the other options. The simulator replays the schedule and sends the repair model a `simulation_trace`, so the model does not have to reconstruct every vessel and container path itself:
-
-- `vessels`: each vessel's voyages in departure order, e.g. `voyage 5: Shanghai h13 -> Rotterdam h63, carrying C5 x2, C6 x5`, plus voyages used out of the maximum.
-- `shipments`: for each shipment, groups of units that took the same legs, and their status: `on time`, `LATE` (with hours late), or `NOT DELIVERED` (with the port and hour where they are waiting).
-
-Only hours where something happens are listed, which keeps the trace short (about 5.5 KB for a full medium schedule). The trace is also saved in each attempt's `validation` in the results file.
+`--tiered-safeguards` runs the latest staged workflow: planning support
+on the initial plan, guided repair first, then an outline-assisted repair
+if another attempt is needed. Output recovery can handle an initial or
+repair reply; delivery checks compare proposed repairs with the accepted
+schedule. The simulator alone decides validity, and the repair limit still
+applies. The selected safeguards and attempt history are saved in the
+result file.
 
 ## Setup
 
@@ -163,8 +146,8 @@ python pipeline.py
 # Choose a provider and instance
 python pipeline.py --provider soclaas --instance data/easy.json
 
-# With safeguards, and a custom output file
-python pipeline.py --provider soclaas --instance data/hard.json --safeguard \
+# With the tiered safeguards, and a custom output file
+python pipeline.py --provider soclaas --instance data/hard.json --tiered-safeguards \
     --output results/hard_safeguard.json
 ```
 
@@ -178,28 +161,41 @@ Options:
 | `--output PATH` | Where to save results (default `results/pipeline_result.json`). |
 | `--max-repairs N` | Maximum repair attempts (default 3). |
 | `--reasoning-effort LEVEL` | Only for models that support it. Otherwise read from `.env`. |
-| `--safeguard` | Turn on grounded feedback, output recovery, and delivery preservation. |
-| `--outline {off,fresh,rolling}` | Ask for a plan outline before the JSON (default `off`). |
-| `--trace` | Send the simulator's vessel and shipment trace to the repair model. |
+| `--planning-support` | Rolling outline. |
+| `--guided-repair` | Grounded feedback and simulation trace. |
+| `--repair-guards` | Output recovery and delivery preservation. |
+| `--all-safeguards` | All three groups. |
+| `--tiered-safeguards` | Use the latest staged safeguard workflow. |
 | `--initial-schedule PATH` | Start from a saved schedule or pipeline result instead of calling the planner, for controlled comparisons. |
 | `--resume-final` | With `--initial-schedule`, use that result's final schedule instead of its first. |
 | `--request-timeout SECONDS` | Timeout for each model request. |
 
-The safeguard options can be combined freely, and `planner_metadata.safeguards` in the results file records which were on:
+The three group flags can be combined; `--tiered-safeguards` is a separate
+workflow. `planner_metadata.safeguards` records the effective components:
 
 ```bash
-python pipeline.py --provider soclaas --instance data/hard.json --safeguard --outline rolling --trace
+python pipeline.py --provider soclaas --instance data/hard.json --all-safeguards
 ```
 
-To compare runs with and without safeguards from the same starting schedule:
+To compare the groups from the same starting schedule:
 
 ```bash
 python pipeline.py --provider soclaas --output results/base.json
-python pipeline.py --provider soclaas --initial-schedule results/base.json --safeguard \
-    --output results/safeguard.json
-python pipeline.py --provider soclaas --initial-schedule results/base.json --trace \
-    --output results/trace.json
+python pipeline.py --provider soclaas --initial-schedule results/base.json \
+    --output results/group_baseline.json
+python pipeline.py --provider soclaas --initial-schedule results/base.json \
+    --planning-support --output results/group_planning.json
+python pipeline.py --provider soclaas --initial-schedule results/base.json \
+    --guided-repair --output results/group_guided.json
+python pipeline.py --provider soclaas --initial-schedule results/base.json \
+    --repair-guards --output results/group_guards.json
+python pipeline.py --provider soclaas --initial-schedule results/base.json \
+    --all-safeguards --output results/group_all.json
 ```
+
+Use the same model, instance, reasoning level, and repair budget in every
+run. An initial schedule contains no outline, so the first repair in the
+planning-support group creates one.
 
 ## Running the Classical CSP Baseline
 
